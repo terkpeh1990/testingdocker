@@ -1,0 +1,139 @@
+{% extends 'partials/inventory/inventorybase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        {% #card title="List Of Assets" %}
+        <div class="table-responsive">
+      
+            {% #table %}
+            {% #thead %}
+                {% #tr name ="headrow" %}
+                    {% #th name ="headbatch" %}Asset ID.{% /th %}
+                    {% #th name ="headintakedate" %}Description{% /th %}
+                    {% #th name ="headbatch" %}Serial/Chasis No.{% /th %}
+                    {% #th name ="headbatch" %}Registration No.{% /th %}
+                    {% #th name ="headbatch" %}Assigned To{% /th %}
+                    {% #th name ="headbatch" %}Location{% /th %}
+                    {% #th name ="headbatch" %}Cureent Status{% /th %}
+                    {% #th name ="headbatch" %}Action{% /th %}
+
+                    
+                
+                    
+                {% /tr %}
+            {% /thead%}
+            {% #tbody %}
+                {% for data in assets_list  %}
+                    {% #tr name ="bodyrow" %}
+                        {% #td name ="sn" %}{{data.asset_id}}{% /td %}
+                        {% #td name ="description" %}{{data.description}}{% /td %}
+                        {% #td name ="sn" %}{{data.chassisno}}{% /td %}
+                        {% #td name ="sn" %}{{data.registrationnumber}}{% /td %}
+                        {% #td name ="sn" %}{{data.user.last_name }} {{data.user.first_name}}{% /td %}
+                        {% #td name ="sn" %}{{data.subcostcenter.name }} ----- {{data.costcenter.name}} {% /td %}
+                        {% #td name ="sn" %}{{data.currentstatus}}{% /td %}
+                        {% #td name ="sn" %}
+                         <a href="{% url 'fixedassets:detail-assets' data.id %}" class="btn btn-sm btn-soft-primary"><i class="mdi mdi-eye-outline"></i></a>
+                        {% /td %}
+                        
+                        
+                        
+                    {% /tr %}
+                {% endfor %}
+            {% /tbody %}
+        {% /table %}
+                
+           
+            <!-- end table -->
+        </div>
+        {% /card %}
+        <!--end card-->
+       
+</div>
+
+{% endblock %}
+
+{% block extra_content %}  
+    {% #comfirmation name="approve"  %}
+        {% #avatar %}
+            <i class="bx bx-check-double"></i>     
+        {% /avatar %} 
+        {% #comfirmationtext %}
+        Are you sure you want to return Assets? <br>
+        This Process is Irreversible.
+        {% /comfirmationtext %} 
+        {% #comfirmation_footer %}
+            <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Proceed</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% /comfirmation_footer %}     
+    {% /comfirmation %}
+ 
+
+
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+
+     <!-- Required datatable js -->
+     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+     <!-- Buttons examples -->
+     <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+     
+     <!-- Responsive examples -->
+     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+     <!-- Datatable init js -->
+     <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+     
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record");
+            var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id"); 
+                deleteModalAnchor.setAttribute("data-record-id", recordId);
+                deleteModalAnchor.setAttribute("href", "/inventory/assets/return/" + recordId + "/asset/");
+                deleteModalAnchor.style.display = "block";
+              });
+            });
+          });
+        
+     </script> 
+
+{% endblock %}

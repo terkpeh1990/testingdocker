@@ -1,0 +1,493 @@
+{% extends 'partials/accounting/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block extra_css %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    
+    <div class="col-xl-7">
+       {% #card title="Imprest Detail" %}
+                
+                <div class='row'>
+                    <div class="col-3 mb-3 d-print-none">
+                        <table class="table ">
+                            
+                            <tbody>
+                                
+                                    <tr>
+                                        
+                                        <td class="border-0 "> <b>Status</b>  </td>
+                                        <td class="border-0">
+                                            {% if imprest.status == 'Pending'  or  imprest.status == 'Cancelled' %}
+                                                <span class="badge bg-danger">{{imprest.status}}</span>
+                                            {% elif imprest.status == 'Approved'  %}
+                                                <span class="badge bg-warning">{{imprest.status}}</span>
+                                            {% elif imprest.status == 'Certified' %}
+                                                <span class="badge bg-info">{{imprest.status}}</span>
+                                            {% elif imprest.status == 'Paid' %}
+                                                <span class="badge bg-primary">{{imprest.status}}</span>
+                                           
+                                            {% else %}
+                                                <span class="badge bg-success">{{imprest.status}}</span>   
+                                            {% endif %}
+                               
+                                        </td>
+                                    
+                                    </tr>
+                                    
+                        </table>
+                    </div>
+
+                </div>
+                <div class='row'>
+                        
+                
+                    <div class="table-responsive mt-2">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Date</th>
+                                    <th>Detail of Claims</th>
+                                    <th class="text-end">Amount</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                    <tr>
+                                        
+                                        <td>{{imprest.impress_date}}</td>
+                                        <td>{{imprest.claim_detail}}</td>
+                                       
+                                        <td class="text-end">{{currency.symbol }} {{ imprest.amount|floatformat:2|intcomma }}</td>
+                                      
+                                    </tr>
+                                
+                                
+                                <tr>
+                                    
+                                        
+                                        
+                                        <td colspan="2" class="border-0 text-end"><strong> Total</strong></td>
+                                        <td class="border-0 text-end"><h5 class="m-0">
+                                                {{currency.symbol }} {{ imprest.amount|floatformat:2|intcomma }}
+                                        </h5>
+                                        </td>
+                                </tr>
+                                <tr>
+                                    
+                                        
+                                        
+                                    <td colspan="2" class="border-0 text-end"><strong> Amount Given</strong></td>
+                                    <td class="border-0 text-end"><h5 class="m-0">
+                                            {{currency.symbol }} {{ imprest.ammount_given|floatformat:2|intcomma }}
+                                    </h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    
+                                        
+                                        
+                                    <td colspan="2" class="border-0 text-end"><strong> Actual Expense</strong></td>
+                                    <td class="border-0 text-end"><h5 class="m-0">
+                                            {{currency.symbol }} {{ imprest.actual_expense|floatformat:2|intcomma }}
+                                    </h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    
+                                        
+                                        
+                                    <td colspan="2" class="border-0 text-end"><strong> Difference</strong></td>
+                                    <td class="border-0 text-end"><h5 class="m-0">
+                                            {{currency.symbol }} {{ imprest.difference|floatformat:2|intcomma }}
+                                    </h5>
+                                    </td>
+                                </tr>
+                                
+                            
+                            <tr>
+                                    
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td ></td>
+                                <td ></td>
+                                <td></td>
+                                
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                    </div>  
+                    
+                    <!-- <div class="d-print-none mt-4">
+                        <div class="float-end"> 
+                            <a href="javascript:window.print()"  class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
+                        </div>
+                    </div> -->
+                </div>
+                <div class='row'>
+                    <div class='col-xl-6'>
+                        <br>
+                        <div class="table-responsive mt-2">
+                            <table class="table ">
+                               
+                                <tbody>
+                                        <h5>Particulars of Claimant </h5>
+                                        <tr>
+                                            
+                                            <td>Name</td>
+                                            <td>{{imprest.raised_by.first_name }} {{imprest.raised_by.last_name }}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            
+                                            <td>Branch</td>
+                                            <td>{{imprest.raised_sub_division}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            
+                                            <td>Grade</td>
+                                            <td>{{imprest.raised_rank}}</td>
+                                           
+                                        </tr>
+                                    
+                            </table>
+                        </div> 
+                    </div>
+                    <div class='col-xl-6'>
+                            <br>
+                            
+                            {% if imprest.approved_by %}
+                                <div class="table-responsive mt-2">
+                                    <table class="table ">
+                                        <h5>Branch/Unit Head</h5>
+                                        <tbody>
+                                            
+                                                <tr>
+                                                    
+                                                    <td>Name </td>
+                                                    <td>{{imprest.approved_by.first_name }} {{imprest.approved_by.last_name }}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td>Branch</td>
+                                                    <td>{{imprest.approved_sub_division}}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td>Grade</td>
+                                                    <td>{{imprest.approved_rank}}</td>
+                                                
+                                                </tr>
+                                            
+                                    </table>
+                                </div> 
+                            {% endif %}
+                                
+                            
+
+                       
+                            
+                        
+                    </div>
+                </div>
+                <div class='row'>
+                    
+                    <div class='col-xl-6'>
+                        
+                        <br>
+                            
+                            {% if imprest.certified_by  %}
+                                <div class="table-responsive mt-2">
+                                    <table class="table ">
+                                        <h5>Claim Certification</h5>
+                                        <tbody>
+                                            
+                                                <tr>
+                                                    
+                                                    <td>Name </td>
+                                                    <td>{{imprest.certified_by.first_name }} {{imprest.certified_by.last_name }}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td>Branch</td>
+                                                    <td>{{imprest.certified_sub_division}}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td>Grade</td>
+                                                    <td>{{imprest.certified_rank}}</td>
+                                                
+                                                </tr>
+                                            
+                                    </table>
+                                </div> 
+                            {% endif %}
+                                
+                            
+
+                      
+                            
+                        
+                    </div>
+                    <div class='col-xl-6'>
+                        
+                        <br>
+                            
+                            {% if imprest.paid_by  %}
+                                <div class="table-responsive mt-2">
+                                    <table class="table ">
+                                        <h5>Paid By</h5>
+                                        <tbody>
+                                            
+                                                <tr>
+                                                    
+                                                    <td>Name </td>
+                                                    <td>{{imprest.paid_by.first_name }} {{imprest.paid_by.last_name }}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td>Branch</td>
+                                                    <td>{{imprest.paid_sub_division}}</td>
+                                                
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td>Grade</td>
+                                                    <td>{{imprest.paid_rank}}</td>
+                                                
+                                                </tr>
+                                            
+                                    </table>
+                                </div> 
+                            {% endif %}
+                                
+                            
+
+                      
+                            
+                        
+                    </div>
+                
+                    
+                    
+                    
+                
+                    <div class="d-print-none mt-4">
+                        <div class="float-end"> 
+                            
+                            {% if perms.accounting.custom_create_imprest and imprest.status == 'Pending' and imprest.sub_division == request.user.sub_division %}
+                                {% if imprest.raised_by == request.user and not imprest.notifyhod  %}
+                                    <a href="{% url 'accounting:edit-imprest' imprest.id %}" class="btn btn-warning w-md waves-effect waves-light m-2">Update</a>
+                                {% endif %}
+                            {% endif %}
+                            <a href="{% url 'accounting:imprest-notifyhod-close' imprest.id %}" class="btn btn-primary w-md waves-effect waves-light m-2">Close</a>
+                                
+                            
+                            <a href="javascript:window.print()"  class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+               
+           
+        {% /card %}
+        <!--end card-->
+       
+    </div>
+    <div class="col-xl-5">
+        <div class="card d-print-none">
+            <div class="card-body">
+                <div class="d-print-none mt-4">
+                    <div class="flex-shrink-0 d-flex justify-content-end mb-1" >
+                        {% if imprest.status == 'Pending'   %}
+                            {% if perms.accounting.custom_approve_imprest %}
+                            
+                                    <a href="#delete_link" id="delete-record" data-record-id="{{ imprest.id }}" data-bs-toggle="modal" class="delete-record btn btn-primary w-md waves-effect waves-ligh" data-target="#jobDelete">
+                
+                                        Approve Imprest
+                                    </a>
+                            {% endif %}
+
+                       
+                        {% elif imprest.status == 'Approved'   %}
+                            {% if perms.accounting.custom_certify_imprest %}
+                            
+                                    <a href="#delete_link" id="delete-record" data-record-id="{{ imprest.id }}" data-bs-toggle="modal" class="delete-record btn btn-primary w-md waves-effect waves-ligh" data-target="#jobDelete">
+                
+                                        Certify Imprest
+                                    </a>
+                            {% endif %}
+                            
+                        
+                        {% elif imprest.status == 'Certified'   %}
+                            {% if perms.accounting.custom_pay_imprest %}
+                            
+                                    <a href="#delete_link" id="delete-record" data-record-id="{{ imprest.id }}" data-bs-toggle="modal" class="delete-record btn btn-primary w-md waves-effect waves-ligh" data-target="#jobDelete">
+                
+                                        Pay Imprest
+                                    </a>
+                            {% endif %}
+                        
+                        {% elif imprest.status == 'Paid' and imprest.actual_expense > 0  %}
+                        {% if perms.accounting.custom_pay_imprest %}
+                        
+                                <a href="#delete_link" id="delete-record" data-record-id="{{ imprest.id }}" data-bs-toggle="modal" class="delete-record btn btn-primary w-md waves-effect waves-ligh" data-target="#jobDelete">
+            
+                                    Retire Imprest
+                                </a>
+                        {% endif %}
+                        {% elif imprest.status == 'Paid' and imprest.actual_expense <= 0  %}
+                            {% if perms.accounting.custom_pay_imprest %}
+                            
+                                <a href="{% url 'accounting:add-imprest-expense' imprest.id %}" class="btn btn-primary w-md waves-effect waves-light m-2">Enter Actual Expense</a>
+                            {% endif %}
+                        
+                        {% else   %}
+                           
+                            
+                        {% endif %}
+                    
+                    </div>
+                    
+                </div>
+                <div class='row'>
+                    {% if minutes  %}
+                    <div class="py-2 mt-3">
+                        <h3 class="font-size-15 fw-bold">Munites/Approval</h3>
+                    </div>
+                    <div class="">
+                        <ul class="verti-timeline list-unstyled">
+                            {% for data in minutes  %}
+                                <li class="event-list">
+                                    <div class="event-timeline-dot">
+                                        <i class="bx bx-right-arrow-circle"></i>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0 me-3">
+                                            <i class="bx bx-copy-alt h2 text-primary"></i>
+                                        </div>
+                                        <div class="">
+                                            <div class="m-2">
+                                                <h5>{{data.timeline_comment}} <br>
+                                            
+                                                    {{data.timelinedate}}
+                                                 </h5>
+                                                {% if data.minutes %}
+                                                    <p class="text-muted ">{{data.minutes|title}}</p>
+                                                    {% comment %} <p class="text-muted">New common language will be more simple and regular than the existing jicnjeinjocNJONJqcljopenjqoncjenjwivnrjhinjvronjwovenwjiVPNRJWovnjiopnJVROPNJWopnjopnwjvOPNRJOPWNJVRPONWJonvjropwnJVROPNWJovnjronwjvrnjwornjvwopnvownjvon.</p> {% endcomment %}
+                                                {% endif %}
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            
+                            
+                            
+                            
+                        </ul>
+                    
+                    </div>
+                    
+                    {% endif %}
+                    
+                    
+                    <hr>
+
+                    
+                </div>
+               
+            
+            </div>
+            
+            
+           
+            
+
+            
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_content %}  
+{% #comfirmation name="approve"  %}
+    {% #avatar %}
+        <i class="bx bx-check-double"></i>     
+    {% /avatar %} 
+    {% #comfirmationtext %}
+       Are You Sure You Want To Proceed. 
+    {% /comfirmationtext %} 
+    {% #comfirmation_footer %}
+        <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Comfirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    {% /comfirmation_footer %}     
+{% /comfirmation %}
+
+{% endblock %}
+{% block extra_javascript %}
+
+<!-- Required datatable js -->
+<script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+<!-- Buttons examples -->
+<script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+
+<!-- Responsive examples -->
+<script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+<!-- Datatable init js -->
+<script src="{% static 'js/pages/datatables.init.js' %}"></script>
+
+<script src="{% static 'js/auto_modal.js' %}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var deleteAnchors = document.getElementsByClassName("delete-record");
+    var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+    Array.from(deleteAnchors).forEach(function(anchor) {
+    anchor.addEventListener("click", function(event) {
+    event.preventDefault();
+    var recordId = this.getAttribute("data-record-id"); 
+    deleteModalAnchor.setAttribute("data-record-id", recordId);
+    deleteModalAnchor.setAttribute("href", "/accounting/imprest/" + recordId + "/approve/");
+    deleteModalAnchor.style.display = "block";
+    });
+    });
+    }); 
+</script>
+
+
+{% endblock %}
+

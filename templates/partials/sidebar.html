@@ -1,0 +1,65 @@
+{% load static %} {% block sidebar %}
+  <!-- ========== Left Sidebar Start ========== -->
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
+      <!-- - Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
+
+          <li>
+          {% if perms.authentication.custom_view_user %}
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bxs-user-detail"></i>
+              <span key="t-contacts">Authentication</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+              {% if perms.authentication.custom_view_user %}
+                  <li>
+                    <a href="{% url 'authentication:group-list' %}" key="t-user-grid">Groups</a>
+                  </li>
+                  
+                  <li>
+                    <a href="{% url 'authentication:user-list' %}" key="t-user-list">Users</a>
+                  </li>
+              {% endif %}
+            </ul>
+          </li>
+          {% endif %}
+          <li>
+            {% if perms.company.custom_view_devision %}
+              <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-hive"></i>
+                <span key="t-contacts">Setup</span>
+              </a>
+              <ul class="sub-menu" aria-expanded="false">
+                {% if perms.company.custom_view_devision %}
+                  <li>
+                    <a href="{% url 'company:devision-list' %}" key="t-devision">Cost Centers</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'company:pending-devision-list' %}" key="t-pendingdevision">Approve Cost Centers</a>
+                  </li>
+                {% endif %}
+                {% if perms.company.custom_view_sub_devision %}
+                  <li>
+                    <a href="{% url 'company:sub_division-list' %}" key="t-region">Sub Cost Centers</a>
+                  </li>
+                {% endif %}
+                <li>
+                  <a href="{% url 'authentication:grade-list' %}" key="t-user-grid">Grade</a>
+                </li>
+                
+              </ul>
+            </li>
+            {% endif %}
+         
+        </ul>
+      </div>
+      <!-- Sidebar -->
+    </div>
+  </div>
+  <!-- Left Sidebar End -->
+{% endblock %}
+

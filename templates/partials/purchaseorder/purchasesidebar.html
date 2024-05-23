@@ -1,0 +1,65 @@
+{% load static %} {% block sidebar %}
+  <!-- ========== Left Sidebar Start ========== -->
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
+      <!-- - Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
+          
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Purchase Order</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    {% if perms.inventory.custom_view_supplier %}
+                        <li>
+                            <a href="{% url 'inventory:supplier-list' %}" key="t-supplier">Suppliers</a>
+                        </li> 
+                    {% endif %}
+                    {% if perms.purchase_order.custom_view_purchase_requisition %}
+                        <li>
+                            <a href="{% url 'purchaseorder:purchase-requisition-list' %}" key="t-supplier">Purchase Requisiton</a>
+                        </li> 
+                    {% endif %}
+                    {% if perms.purchase_order.custom_view_lpo %}
+                        <li>
+                            <a href="{% url 'purchaseorder:lpo' %}" key="t-supplier">LPO</a>
+                        </li> 
+                    {% endif %}
+                </ul>
+            </li>
+            {% if perms.inventory.custom_view_job_certification %}
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Certififaction</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    
+                {% if perms.inventory.custom_view_restock %}
+                    <li>
+                        <a href="{% url 'inventory:restock-list' %}" key="t-product">Consumable</a>
+                    </li> 
+                {% endif %}
+                {% if perms.inventory.custom_view_job_certification %}
+                    <li>
+                        <a href="{% url 'inventory:job-list' %}" key="t-product">Capital</a>
+                    </li> 
+                {% endif %}
+                
+                </ul>
+            </li>
+          {% endif %}
+        
+          
+          
+        </ul>
+      </div>
+      <!-- Sidebar -->
+    </div>
+  </div>
+  <!-- Left Sidebar End -->
+{% endblock %}

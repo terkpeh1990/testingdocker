@@ -1,0 +1,162 @@
+{% extends 'partials/helpdesk/helpdeskbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    <div class="col-lg-12">
+        {% #card title="List Of Ticket" %}
+        
+        <div class="table-responsive">
+            {% if perms.helpdesk.custom_create_ticket %}
+                <div class="flex-shrink-0 d-flex justify-content-end mb-1" >
+                    <a href="{% url 'helpdesk:new-ticket' %}" class="btn btn-primary m-2 ">Raise New Ticket</a>
+                    <!-- <a href="{% url 'helpdesk:upload-agent' %}" class="btn btn-success  ml-2 mt-2 mb-2">Upload Agent</a> -->
+                </div>
+            {% endif %}
+            {% #table %}
+                {% #thead %}
+                    {% #tr name ="headrow" %}
+                        {% #th name ="headid" %}ID{% /th %}
+                        {% #th name ="headid" %}Date{% /th %}
+                        {% #th name ="headName" %}Subject {% /th %}
+                        {% #th name ="headTeam" %}Cost Center {% /th %}
+                        {% #th name ="headTeam" %}Sub Cost Center {% /th %}
+                        {% #th name ="headTeam" %}Status {% /th %}
+                        {% #th name ="headTeam" %} Ticket User{% /th %}
+                        
+                        {% #th name ="headAction" %} Action {% /th %}
+                        
+                    {% /tr %}
+                {% /thead%}
+                {% #tbody %}
+                    {% for data in ticket_list  %}
+                        {% #tr name ="bodyrow" %}
+                            {% #td name ="groupid" %}{{data.id}}{% /td %}
+                            {% #td name ="groupid" %}{{data.ticket_date}}{% /td %}
+                            {% #td name ="groupname" %}{{data.subject}}{% /td %}
+                            {% #td name ="groupcc" %}{{data.costcenter.name}}{% /td %}
+                            {% #td name ="groupscc" %}{{data.subcostcenter.name}}{% /td %}
+                            {% #td name ="status" %}
+                                {% if data.status == 'Assigned' %}
+                                    <span class="badge bg-info">{{data.status}}</span>
+                                {% elif data.status == 'Resolved'  %}
+                                    <span class="badge bg-success">{{data.status}}</span>
+                                {% elif data.status == 'Escalated'   %}
+                                    <span class="badge bg-warning">{{data.status}}</span>
+                                {% elif data.status == 'Closed'  %}
+                                    <span class="badge bg-primary">{{data.status}}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{data.status}}</span>
+                                        
+                                {% endif %}
+                            {% /td %}
+                            {% #td name ="grouplevel" %}{{data.ticketuser}}{% /td %}
+                            
+                            
+                                {% #td name ="groupaction" %}
+                                
+                                    {% #actions name ="ticketedit" %}
+                                  
+                                        <li data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detial">
+                                            <a href="{% url 'helpdesk:ticket-detail' data.id %}" class="btn btn-sm btn-soft-info"><i class="mdi mdi-eye-outline"></i></a>
+                                        </li>
+                                    
+                                        
+                                    
+                                    {% /actions %}
+                                
+                                {% /td %}
+                            
+                        {% /tr %}
+                    {% endfor %}
+                {% /tbody %}
+            {% /table %}
+           
+            <!-- end table -->
+        </div>
+        {% /card %}
+        <!--end card-->
+       
+</div>
+
+{% endblock %}
+
+{% block extra_content %}  
+    {% #comfirmation   %}
+        {% #avatar %}
+            <i class="mdi mdi-trash-can-outline"></i>     
+        {% /avatar %} 
+        {% #comfirmationtext %}
+            Are you sure you want to permanently delete this ticket
+        {% /comfirmationtext %} 
+
+        {% #comfirmation_footer %}
+            <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Delete Now</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% /comfirmation_footer %}     
+    {% /comfirmation %}
+ 
+
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+     <!-- Required datatable js -->
+     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+     <!-- Buttons examples -->
+     <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+     
+     <!-- Responsive examples -->
+     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+     <!-- Datatable init js -->
+     <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+     
+    {% comment %} <script src="{% static 'js/auto_modal.js' %}"></script> {% endcomment %}
+
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record");
+            var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id"); 
+                deleteModalAnchor.setAttribute("data-record-id", recordId);
+                deleteModalAnchor.setAttribute("href", "/helpdesk/ticket/" + recordId + "/delete/");
+                deleteModalAnchor.style.display = "block";
+              });
+            });
+          });
+     </script>
+
+{% endblock %}

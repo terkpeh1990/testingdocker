@@ -1,0 +1,37 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    
+    
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/dropzone/dist/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+
+    {% #modal title= "Upload Ranks" %}
+        
+        {% #form %}
+            {% csrf_token %}
+            <div class="row mb-2">
+                {{form.file|as_crispy_field}}
+            </div>
+            <div class="text-center mt-4">
+                {% var class=class|default:"btn btn-primary w-md waves-effect waves-light" %}
+                {% #button {% attrs class %} Send Files {% /button %}
+            </div>
+        {% /form %}
+        
+    {%/modal %}
+{% block extra_javascript %}
+    <!-- Plugins js -->
+    <script src="{% static 'libs/dropzone/dist/min/dropzone.min.js' %}"></script>
+
+{% endblock %}
+{% endblock %}

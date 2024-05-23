@@ -1,0 +1,194 @@
+{% load static %}
+{% block header%}
+        <header id="page-topbar">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <!-- LOGO -->
+                    <div class="navbar-brand-box">
+                        <a href="{% url 'dashboard' %}" class="logo logo-dark">
+                            <span class="logo-sm">
+                                {% comment %} <img src="{% static 'images/logo.svg' %}" alt="" height="22"> {% endcomment %}
+                            </span>
+                            <span class="logo-lg">
+                                {% comment %} <img src="{% static 'images/logo-dark.png' %}" alt="" height="17"> {% endcomment %}
+                            </span>
+                        </a>
+
+                        <a href="{% url 'dashboard' %}" class="logo logo-light">
+                            <span class="logo-sm">
+                                {% comment %} <img src="{% static 'images/logo-light.svg' %}" alt="" height="22"> {% endcomment %}
+                            </span>
+                            <span class="logo-lg">
+                                {% comment %} <img src="{% static 'images/logo-light.png' %}" alt="" height="19"> {% endcomment %}
+                            </span>
+                        </a>
+                    </div>
+
+                    <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
+                        <i class="fa fa-fw fa-bars"></i>
+                    </button>
+
+                    <!-- App Search-->
+                   
+                    <div class="dropdown d-inline-block ml-4">
+                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            
+                            <span class="d-none d-xl-inline-block ms-1">Applications</span>
+                            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            {% if user.is_authenticated %}
+                                {% if user.is_superuser %}
+                                    <a class="dropdown-item" href="{% url 'authentication:user-list' %}"><i class="bx bxs-user-detail font-size-16 align-middle me-1"></i>Authentication</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'inventory:dashboard' %}"><i class="bx bx-spreadsheet font-size-16 align-middle me-1"></i> Inventory</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'accounting:currency-list' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Accounting</a>
+                                    <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'dms:filemanager-list' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Documents</a>
+                                    <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'inventory:supplier-list' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Purchase Order</a>
+                                    <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'fixedassets:assetdashboard' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Fixed Assets</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'helpdesk:ticketdashboard' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>HelpDesk</a>
+                                {% else %}
+                                    {% if perms.authentication.custom_create_user %}
+                                        <a class="dropdown-item" href="{% url 'authentication:user-list' %}"><i class="bx bxs-user-detail font-size-16 align-middle me-1"></i>Authentication</a>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                 {% for app in app_model  %}
+                                    {% if app.app.name == 'Inventory' and app.status and perms.appsystem.custom_access_to_inventory  %}
+                                            <a class="dropdown-item" href="{% url 'inventory:dashboard' %}"><i class="bx bx-spreadsheet font-size-16 align-middle me-1"></i> Inventory</a>
+                                            <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    {% if app.app.name  == 'Accounting' and app.status  and perms.appsystem.custom_access_to_accounting %}
+                                        
+                                        <a class="dropdown-item" href="{% url 'accounting:accountclass-list' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Accounting</a>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    {% if app.app.name  == 'Documents' and app.status and perms.appsystem.custom_access_to_dms %}
+                                        <a class="dropdown-item" href="{% url 'dms:filemanager-list' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Documents</a>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    {% if app.app.name  == 'FixedAssets' and app.status and perms.appsystem.custom_access_to_fixedasset %}
+                                        <a class="dropdown-item" href="{% url 'fixedassets:assetdashboard' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Fixed Assets</a>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    {% if app.app.name  == 'HelpDesk' and app.status and perms.appsystem.custom_access_to_helpdesk %}
+                                        <a class="dropdown-item" href="{% url 'helpdesk:ticketdashboard' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>HelpDesk</a>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                {% endfor %}
+                                <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bx bx-dollar-circle font-size-16 align-middle me-1"></i>Home</a>
+                                <div class="dropdown-divider"></div>
+                            {% endif %}
+                                   
+                            {% else %}
+                                
+                            {% endif %}
+                        </div>
+                    </div>
+
+                   
+                </div>
+
+                <div class="d-flex">
+
+                    <div class="dropdown d-inline-block d-lg-none ms-2">
+                        <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                            aria-labelledby="page-header-search-dropdown">
+
+                            <form class="p-3">
+                                <div class="form-group m-0">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item waves-effect"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img id="header-lang-img" src="{% static 'images/flags/us.jpg' %}" alt="Header Language" height="16">
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+
+                           
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="en">
+                                <img src="{% static 'images/flags/us.jpg' %}" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
+                            </a>
+                           
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
+                                <img src="{% static 'images/flags/spain.jpg' %}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
+                            </a>
+
+                            
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="gr">
+                                <img src="{% static 'images/flags/germany.jpg' %}" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
+                            </a>
+
+                            
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="it">
+                                <img src="{% static 'images/flags/italy.jpg' %}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
+                            </a>
+
+                            
+                            <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
+                                <img src="{% static 'images/flags/russia.jpg' %}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
+                            </a>
+                        </div>
+                    </div> -->
+
+
+                    <div class="dropdown d-none d-lg-inline-block ms-1">
+                        <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                            <i class="bx bx-fullscreen"></i>
+                        </button>
+                    </div>
+
+                    
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded-circle header-profile-user" src="{% static 'images/users/avatar-1.jpg' %}"
+                                alt="Header Avatar">
+                            <span class="d-none d-xl-inline-block ms-1">{{request.user.last_name }} {{ request.user.first_name}}</span>
+                            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <!-- item-->
+                            {% comment %} <a class="dropdown-item" href="#"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock Screen</span></a> {% endcomment %}
+                            <div class="dropdown-divider"></div>
+                            {% if user.is_authenticated %}
+                                <a class="dropdown-item" href="{% url 'authentication:change-password' %}"><i class="bx bx-key font-size-16 align-middle me-1"></i> Change Password</a>
+                                <a class="dropdown-item" href="{% url 'authentication:self-edit-user' request.user.id %}"><i class="bx bxs-user-detail font-size-16 align-middle me-1"></i>Update Profile</a>
+                                
+                                <a class="dropdown-item text-danger" href="{% url 'authentication:log-out' %}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i>Log Out</a>
+                            {% else %}
+                                
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div clacalendar-full.htmls="dropdown d-inline-block">
+                        <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
+                            <i class="bx bx-cog bx-spin"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+{% endblock %}

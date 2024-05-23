@@ -1,0 +1,343 @@
+{% extends 'partials/helpdesk/helpdeskbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+
+
+{% if perms.helpdesk.custom_solve_ticket %}
+    <div class="row">
+        <div class="col-lg-3">
+            {% #card  %}
+            <h5 class="fw-semibold">Overview</h5>
+            {% #table2 %}
+                {% #tbody %}
+                        {% #tr name ="rstafid" %}
+                            {% #td name ="headid" %}Ticket ID:{% /td %}
+                            {% #td name ="restockid" %}{{ticket.id}}{% /td %}
+                        {% /tr  %}
+                        
+                        {% #tr name ="name" %}
+                            {% #td name ="headdate" %}Date:{% /td %}
+                            {% #td name ="username" %}{{ ticket.ticket_date }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headdate" %}Subject:{% /td%}
+                            {% #td name ="username" %}{{ticket.subject }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headsupplier" %}Description:{% /td %}
+                            {% #td name ="username" %}{{ ticket.description }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headsupplier" %}Cost Center:{% /td %}
+                            {% #td name ="username" %}{{ ticket.costcenter.name }}{% /td %}
+                        {% /tr  %}
+                    
+                        {% #tr name ="rdriver" %}
+                            {% #td name ="headdriver" %}Sub Cost Center:{% /td %}
+                            {% #td name ="userdriver" %}{{ticket.subcostcenter.name }}  {% /td %}
+                        {% /tr  %}
+                        {% #tr name ="rcontact" %}
+                            {% #td name ="headcontact" %}Owner :{% /td %}
+                            {% #td name ="contact" %}{{ticket.ticketuser }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="rii" %}
+                            {% #td name ="headi" %}Contact :{% /td %}
+                            {% #td name ="ins" %}{{ticket.ticketuser.phone_number }}{% /td %}
+                        {% /tr  %}
+                        
+                        {% #tr name ="rstatus" %}
+                            {% #td name ="headstatus" %}Status :{% /td %}
+                            {% #td name ="userstatus" %}
+                                {% if ticket.status == 'Assigned' %}
+                                    <span class="badge bg-info">{{ticket.status}}</span>
+                                {% elif ticket.status == 'Resolved' %}
+                                    <span class="badge bg-success">{{ticket.status}}</span>
+                                {% elif ticket.status == 'Escalated'  %}
+                                    <span class="badge bg-warning">{{ticket.status}}</span>
+                                {% elif ticket.status == 'Closed'  %}
+                                    <span class="badge bg-primary">{{ticket.status}}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ticket.status}}</span>
+                                        
+                                {% endif %}
+                            {% /td %}
+                            
+                        {% /tr  %}
+                        {% #tr name ="rstatus" %}
+                            {% #td name ="headstatus" %}Priority :{% /td %}
+                            {% #td name ="userstatus" %}
+                                {% if ticket.priority == 'Low' %}
+                                    <span class="badge bg-info">{{ticket.priority}}</span>
+                                
+                                {% elif ticket.priority == 'Medium'  %}
+                                    <span class="badge bg-warning">{{ticket.priority}}</span>
+                                
+                                {% else %}
+                                    <span class="badge bg-danger">{{ticket.priority}}</span>
+                                        
+                                {% endif %}
+                            {% /td %}
+                            
+                        {% /tr  %}
+                        
+                {% /tbody %}
+            {% /table2 %}
+        
+            {% #actions name ="districtedit" %}
+                
+                {% if perms.helpdesk.custom_solve_ticket %}
+                    {% if ticket.status == 'Pending' %}
+                        <a href="{% url 'helpdesk:assign-agent' ticket.id  %}" class="btn btn-soft-warning w-100">Assign Ticket</a>
+                    {% endif %}
+                {% endif %}
+                    
+                
+                
+                <!-- {% if ticket.status == 'Assigned' or ticket.status == 'Escalated' %}
+                    <a href="{% url 'helpdesk:excalate-ticket' ticket.id %}" class="btn btn-soft-info w-100">Excalate Ticket</a>
+                {% endif %} -->
+            
+            {% /actions %}
+            
+            {% #actions name ="districtedit" %}
+                
+                <a href="{% url 'helpdesk:ticket-list'  %}" class="btn btn-soft-primary w-100">Close</a>
+            
+                
+            {% /actions %}
+            {% /card %}
+
+        </div>
+        <div class="col-lg-5">
+            {% #card  %}
+                <h5 class="fw-semibold">Comments From Agents</h5>
+
+                <div class="">
+                    <ul class="verti-timeline list-unstyled">
+                        {% for data in comment  %}
+                            <li class="event-list">
+                                <div class="event-timeline-dot">
+                                    <i class="bx bx-right-arrow-circle"></i>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="bx bx-copy-alt h2 text-warning"></i>
+                                    </div>
+                                    <div class="">
+                                        <div class="m-2">
+                                            <h5>{{data.comment|title}}
+                                            </h5>
+                                            
+                                                <p class="text-muted ">By {{data.agent}} on {{data.commentdate}} at {{data.commenttime}}</p>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        
+                    </ul>
+                
+                </div>  
+            {% /card %}
+
+        </div>
+        <div class="col-lg-4">
+            {% #card  %}
+            
+                <h5 class="fw-semibold">History</h5>
+        
+                <div class="">
+                    <ul class="verti-timeline list-unstyled">
+                        {% for data in ticketassignment  %}
+                            <li class="event-list">
+                                <div class="event-timeline-dot">
+                                    <i class="bx bx-right-arrow-circle"></i>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="bx bx-copy-alt h2 text-danger"></i>
+                                    </div>
+                                    <div class="">
+                                        <div class="m-2">
+                                            <h5>Ticket 
+                                                {% if data.status == 'Assigned' %}
+                                                    <span class="badge bg-info">{{data.status|title}}</span>
+                                                {% elif data.status == 'Resolved'  %}
+                                                    <span class="badge bg-success">{{data.status|title}}</span>
+                                                {% elif data.status == 'Escalated'   %}
+                                                    <span class="badge bg-warning">{{data.status|title}}</span>
+                                                {% elif data.status == 'Closed'  %}
+                                                    <span class="badge bg-primary">{{data.status|title}}</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">{{data.status|title}}</span>
+                                                        
+                                                {% endif %}
+                                               
+                                                {% if data.status == 'Closed' %}
+                                                    by
+                                                {% else %}
+                                                    to
+                                                {% endif %}
+                                                {{data.agent|title}}
+                                            </h5>
+                                            
+                                                <p class="text-muted ">{{data.assigneddate}} {{data.assignedtime}} <br>
+                                                        Expected Date of Completion : {{data.expected_date}} <br>
+                                                    
+                                            
+                                                        
+                                                </p>
+
+                                                {% comment %} <p class="text-muted">New common language will be more simple and regular than the existing jicnjeinjocNJONJqcljopenjqoncjenjwivnrjhinjvronjwovenwjiVPNRJWovnjiopnJVROPNJWopnjopnwjvOPNRJOPWNJVRPONWJonvjropwnJVROPNWJovnjronwjvrnjwornjvwopnvownjvon.</p> {% endcomment %}
+                                        
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        
+                    </ul>
+                
+                </div>  
+
+                
+            {% /card %}
+        </div>
+
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            {% #card  %}
+            <h5 class="fw-semibold">Overview</h5>
+            {% #table2 %}
+                {% #tbody %}
+                        {% #tr name ="rstafid" %}
+                            {% #td name ="headid" %}Ticket ID:{% /td %}
+                            {% #td name ="restockid" %}{{ticket.id}}{% /td %}
+                        {% /tr  %}
+                        
+                        {% #tr name ="name" %}
+                            {% #td name ="headdate" %}Date:{% /td %}
+                            {% #td name ="username" %}{{ ticket.ticket_date }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headdate" %}Subject:{% /td%}
+                            {% #td name ="username" %}{{ticket.subject }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headsupplier" %}Description:{% /td %}
+                            {% #td name ="username" %}{{ ticket.description }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headsupplier" %}Cost Center:{% /td %}
+                            {% #td name ="username" %}{{ ticket.costcenter.name }}{% /td %}
+                        {% /tr  %}
+                    
+                        {% #tr name ="rdriver" %}
+                            {% #td name ="headdriver" %}Sub Cost Center:{% /td %}
+                            {% #td name ="userdriver" %}{{ticket.subcostcenter.name }}  {% /td %}
+                        {% /tr  %}
+                        {% #tr name ="rcontact" %}
+                            {% #td name ="headcontact" %}Owner :{% /td %}
+                            {% #td name ="contact" %}{{ticket.ticketuser }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="rii" %}
+                            {% #td name ="headi" %}Contact :{% /td %}
+                            {% #td name ="ins" %}{{ticket.ticketuser.phone_number }}{% /td %}
+                        {% /tr  %}
+                        
+                        {% #tr name ="rstatus" %}
+                            {% #td name ="headstatus" %}Status :{% /td %}
+                            {% #td name ="userstatus" %}
+                                {% if ticket.status == 'Assigned' %}
+                                    <span class="badge bg-info">{{ticket.status}}</span>
+                                {% elif ticket.status == 'Resolved' %}
+                                    <span class="badge bg-success">{{ticket.status}}</span>
+                                {% elif ticket.status == 'Escalated'  %}
+                                    <span class="badge bg-warning">{{ticket.status}}</span>
+                                {% elif ticket.status == 'Closed'  %}
+                                    <span class="badge bg-primary">{{ticket.status}}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ticket.status}}</span>
+                                        
+                                {% endif %}
+                            {% /td %}
+                            
+                        {% /tr  %}
+                        {% #tr name ="rstatus" %}
+                            {% #td name ="headstatus" %}Priority :{% /td %}
+                            {% #td name ="userstatus" %}
+                                {% if ticket.priority == 'Low' %}
+                                    <span class="badge bg-info">{{ticket.priority}}</span>
+                                
+                                {% elif ticket.priority == 'Medium'  %}
+                                    <span class="badge bg-warning">{{ticket.priority}}</span>
+                                
+                                {% else %}
+                                    <span class="badge bg-danger">{{ticket.priority}}</span>
+                                        
+                                {% endif %}
+                            {% /td %}
+                            
+                        {% /tr  %}
+                        
+                {% /tbody %}
+            {% /table2 %}
+        
+            {% #actions name ="districtedit" %}
+                
+                {% if perms.helpdesk.custom_solve_ticket %}
+                    {% if ticket.status == 'Pending' %}
+                        <a href="{% url 'helpdesk:assign-agent' ticket.id  %}" class="btn btn-soft-warning w-100">Assign Ticket</a>
+                    {% endif %}
+                {% endif %}
+                    
+                
+                
+                <!-- {% if ticket.status == 'Assigned' or ticket.status == 'Escalated' %}
+                    <a href="{% url 'helpdesk:excalate-ticket' ticket.id %}" class="btn btn-soft-info w-100">Excalate Ticket</a>
+                {% endif %} -->
+            
+            {% /actions %}
+            
+            {% #actions name ="districtedit" %}
+                
+                <a href="{% url 'helpdesk:ticket-list'  %}" class="btn btn-soft-primary w-100">Close</a>
+            
+                
+            {% /actions %}
+            {% /card %}
+
+        </div>
+    
+
+    </div>
+
+    
+{% endif %}
+    
+
+{% endblock %}

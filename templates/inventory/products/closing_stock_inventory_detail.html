@@ -1,0 +1,212 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+   
+
+    {% #modal %}
+        <div class ="row mb-2">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+       
+                {% #stats-card  name = "totalusers" %}
+                    {% #stats-card-text name="totaltext" %}
+                        <p class="text-muted mb-2">Avialable Stock</p>
+                        <h5 class="mb-0">{{inventory.avialable_quantity}}</h5>
+                    {% /stats-card-text %}
+                    {% #stats-card-avatar  name="totalav"%}
+                            <i class="bx bx-stats"></i> 
+                    {% /stats-card-avatar %}
+                {% /stats-card %}
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                {% #stats-card name = "totalactive" %}
+                    {% #stats-card-text name="activetest" %}
+                        <p class="text-muted mb-2">Reorder Level</p>
+                        <h5 class="mb-0">{{inventory.product_id.restock_level}}</h5>
+                    {% /stats-card-text %}
+                    {% #stats-card-avatar name="activeav" %}
+                            <i class="bx bx-sort-up"></i> 
+                    {% /stats-card-avatar %}
+                {% /stats-card %}
+            </div>
+            
+        </div>
+        <div class ="row mb-3">
+           
+            {% #table2 %}
+                {% #tbody %}
+                        {% #tr name ="rid" %}
+                            {% #td name ="headid" %}Product ID :{% /td %}
+                            {% #td name ="productid" %}{{inventory.product_id.id}}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headname" %}Product Name :{% /td %}
+                            {% #td name ="productname" %}{{ inventory.product_id.name }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="category" %}
+                            {% #td name ="headcategory" %}Product Category :{% /td %}
+                            {% #td name ="productname" %}{{ inventory.product_id.category_id.name }}{% /td %}
+                        {% /tr  %}
+                        
+                        
+                        {% #tr name ="runit" %}
+                            {% #td name ="headunit" %}Unit of Measurement :{% /td %}
+                            {% #td name ="productunit" %}{{inventory.product_id.unit_of_measurement.name}}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="rutype" %}
+                        {% #td name ="headtype" %}Classification :{% /td %}
+                        {% #td name ="productunit" %}{{inventory.product_id.type_of_product}}{% /td %}
+                    {% /tr  %}
+                        
+                {% /tbody %}
+            {% /table2 %}
+            
+        </div>
+        <div class ="row mb-2">
+            <h4 class="card-title mb-3">Product Inventory  Details</h4>
+            <div class="table-responsive">
+                {% if inventory.product_id.type_of_product == 'Capital' %}
+                    {% #table %}
+                        {% #thead %}
+                            {% #tr name ="headrow" %}
+                            
+                                {% #th name ="headbatch" %}Serial/Chasis No.{% /th %}
+                                {% #th name ="headintakedate" %}Description{% /th %}
+                                {% #th name ="headexpiredate" %}Status{% /th %}
+                                
+                            {% /tr %}
+                        {% /thead%}
+                        {% #tbody %}
+                            {% for data in assets  %}
+                                {% #tr name ="bodyrow" %}
+                                    
+                                    {% #td name ="sn" %}{{data.serial_number}}{% /td %}
+                                    {% #td name ="description" %}{{data.brand_id.name }} {{data.description}}{% /td %}
+                                    {% #td name ="status" %}
+                                        {% if data.status %}
+                                            <span class="badge bg-danger">Issued</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Avialable</span>
+                                        {% endif %}
+                                    
+                                    {% /td %}
+                                    
+                                
+                            
+                                {% /tr %}
+                            {% endfor %}
+                        {% /tbody %}
+                    {% /table %}
+                {% else %}
+                {% #table %}
+                {% #thead %}
+                    {% #tr name ="headrow" %}
+                     
+                        {% #th name ="headbatch" %}Batch Number{% /th %}
+                        {% #th name ="headintakedate" %}Date{% /th %}
+                        {% #th name ="headexpiredate" %}Expiring Date{% /th %}
+                        {% #th name ="headqtyin" %}Intake{% /th %}
+                        {% #th name ="headqtyr" %}Requested{% /th %}
+                        {% #th name ="headav" %}Available Stock{% /th %}
+                    {% /tr %}
+                {% /thead%}
+                {% #tbody %}
+                    {% for data in inventory_detail  %}
+                        {% #tr name ="bodyrow" %}
+                            
+                            {% #td name ="batchnumber" %}{{data.batch_number}}{% /td %}
+                            {% #td name ="intakedate" %}{{data.date_received}}{% /td %}
+                            {% #td name ="expiring-date" %}{{data.expiring_date}}{% /td %}
+                            {% #td name ="intake" %}{{data.quantity_intake}}{% /td %}
+                            {% #td name ="req" %}{{data.quantity_requested}}{% /td %}
+                            {% #td name ="available" %}{{data.avialable_quantity }}{% /td %}
+                           
+                    
+                        {% /tr %}
+                    {% endfor %}
+                {% /tbody %}
+            {% /table %}
+                {% endif %}
+                
+               
+                <!-- end table -->
+            </div>
+        </div>
+        <div class ="row mb-2">
+            {% #actions name ="districtedit" %}
+                <a href="{% url 'inventory:closing-stock-products' inventory.closing_id.id %}" class="btn btn-soft-primary w-100">Close</a>
+            {% /actions %}
+        </div>    
+    {% /modal %}
+    {% block extra_content %}  
+            {% #comfirmation   %}
+                {% #avatar %}
+                    <i class="mdi mdi-trash-can-outline"></i>     
+                {% /avatar %} 
+                {% #comfirmationtext %}
+                    Are you sure you want to permanently delete this Product
+                {% /comfirmationtext %} 
+
+                {% #comfirmation_footer %}
+                    <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Delete Now</a>
+                    <a href="{% url 'inventory:product-list' %}"  class="btn btn-secondary" >Close</a>
+                {% /comfirmation_footer %}     
+            {% /comfirmation %}
+    {% endblock %}
+    {% block extra_javascript %}
+    
+        <!-- Required datatable js -->
+        <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        <!-- Buttons examples -->
+        <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+        <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+        <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+        
+        <!-- Responsive examples -->
+        <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+   
+        <!-- Datatable init js -->
+        <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var deleteAnchors = document.getElementsByClassName("delete-record");
+                var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+                Array.from(deleteAnchors).forEach(function(anchor) {
+                anchor.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    var recordId = this.getAttribute("data-record-id"); 
+                    deleteModalAnchor.setAttribute("data-record-id", recordId);
+                    deleteModalAnchor.setAttribute("href", "/inventory/product/" + recordId + "/delete/");
+                    deleteModalAnchor.style.display = "block";
+                });
+                });
+            });
+         </script>
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,502 @@
+{% extends 'partials/accounting/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block extra_css %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    
+    <div class="col-xl-9">
+       {% #card title="Internal Audit Ledger Detail" %}
+                
+            
+           <div class='row'>
+
+            {% #table2 %}
+                    <h5>Internal Audit Ledger Information</h5>
+                {% #tbody %}
+                    {% #tr name ="accountclass" %}
+                        {% #td name ="headdate" %}ID: {% /td %}
+                        {% #td name ="username" %}{{ ia.id }} {% /td %}
+                    {% /tr  %}
+                    {% #tr name ="accountclass" %}
+                        {% #td name ="headdate" %}Date Recieved: {% /td %}
+                        {% #td name ="username" %}{{ ia.ia_date }} {% /td %}
+                    {% /tr  %}
+                    {% #tr name ="accountclass" %}
+                        {% #td name ="headdate" %}IA Code:  {% /td %}
+                        {% #td name ="username" %}{{ ia.ia_code }} {% /td %}
+                    {% /tr  %}
+                    {% #tr name ="accountclass" %}
+                        {% #td name ="headdate" %}Source of Funding:{% /td %}
+                        {% #td name ="date" %}{{ ia.source_of_funding }}{% /td %}
+                    {% /tr  %}
+                    {% #tr name ="accountclass" %}
+                        {% #td name ="headpayment" %}Cost Center:{% /td %}
+                        {% #td name ="pay" %} {{ ia.cost_center }}{% /td %}
+                    {% /tr  %}
+                    
+                    {% #tr name ="status" %}
+                        {% #td name ="headstatus" %}Status:{% /td %}
+                        {% #td name ="userstatus" %}
+                        {% if ia.status == 'Completed'%}
+                                <span class="badge bg-primary">{{ia.status}}</span>
+                            {% elif ia.status == 'Returned'  %}
+                                <span class="badge bg-warning">{{ia.status}}</span>
+
+                            {% else %}
+                                <span class="badge bg-success">{{ia.status}}</span>   
+                            {% endif %}
+                        {% /td %}
+                    {% /tr  %}
+                {% /tbody %}
+            {% /table2 %}
+
+
+                    
+                {% #table2 %}
+                    <h5>Payment Voucher Information</h5>
+                    {% #tbody %}
+                            
+                        {% #tr name ="accountclass" %}
+                            {% #td name ="headdate" %}Pv ID: {% /td %}
+                            {% #td name ="username" %}{{ pv.id }} {% /td %}
+                        {% /tr  %}
+                        {% #tr name ="accountclass" %}
+                            {% #td name ="headdate" %}Pv Date:{% /td %}
+                            {% #td name ="date" %}{{ pv.pv_date }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="accountclass" %}
+                            {% #td name ="headpayment" %}Pv Payment Type:{% /td %}
+                            {% #td name ="pay" %} {{ pv.type_of_pay }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="accountclass" %}
+                            {% #td name ="headpvtype" %}Pv Type of Pv:{% /td %}
+                            {% #td name ="pv_type" %} {{ pv.type_of_pv }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="status" %}
+                            {% #td name ="headstatus" %}Pv Status:{% /td %}
+                            {% #td name ="userstatus" %}
+                            {% if pv.status == 'Pending'  or  pv.status == 'Cancelled' %}
+                                    <span class="badge bg-danger">{{pv.status}}</span>
+                                {% elif pv.status == 'Authorised'  %}
+                                    <span class="badge bg-warning">{{pv.status}}</span>
+                                {% elif pv.status == 'Approved' %}
+                                    <span class="badge bg-info">{{pv.status}}</span>
+                                {% elif pv.status == 'Authorised & Passed' %}
+                                    <span class="badge bg-primary">{{pv.status}}</span>
+                                {% elif pv.status == 'Check No Entered'  %}
+                                    <span class="badge bg-secondary">{{pv.status}}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{pv.status}}</span>   
+                                {% endif %}
+                            {% /td %}
+                        {% /tr  %}
+                        
+                        {% #tr name ="memo" %}
+                            {% #td name ="headmemo" %}Document:{% /td%}
+                            {% #td name ="username" %}{{ pv.description }}
+                            {% if pv.document %}
+                                
+                                <a href="{% url 'accounting:view-pvdocument-detail' pv.id %}" data-bs-title="View Documents" class="btn btn-sm btn-soft-info"><i class="mdi mdi-eye-outline"></i></a>
+                            
+                            {% endif %}
+                            {% /td %}
+                        {% /tr  %}
+                        {% #tr name ="typeofbank" %}
+                            {% #td name ="headsupplier" %}Type of Bank Account :{% /td %}
+                            {% #td name ="username" %}{{ pv.bankaccounttype }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="payee" %}
+                            {% #td name ="headpayee" %}Pay To :{% /td %}
+                            {% #td name ="payee" %}{{ pv.payto }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="address" %}
+                            {% #td name ="headsupplier" %}Address :{% /td %}
+                            {% #td name ="username" %}{{ pv.pay_to_address }}{% /td %}
+                        {% /tr  %}  
+                        {% #tr name ="address" %}
+                                {% #td name ="headsupplier" %}<b>Transaction Currency :</b>{% /td %}
+                                {% #td name ="username" %}<b> {{ pv.currency_id.name }} ( {{ pv.currency_id.symbol }})</b>{% /td %}
+                        {% /tr  %}       
+                    {% /tbody %}
+            {% /table2 %}
+                    <div class="table-responsive mt-2">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Class</th>
+                                    <th>Item</th>
+                                    <th>Sub Item</th>
+                                    <th>Sub Sub Item</th>
+                                    <th>Particulars Of Payment</th>
+                                    <th class="text-end">Amount</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in detail %}
+                                    <tr>
+                                        
+                                        <td>{{data.accout_code.account_sub_item_id.account_item_id.account_class_id.code}}</td>
+                                        <td>{{data.accout_code.account_sub_item_id.account_item_id.code}}</td>
+                                        <td>{{data.accout_code.account_sub_item_id.code}}</td>
+                                        <td>{{data.accout_code.code}}</td>
+                                        <td>{{data.description}}</td>
+                                        <td class="text-end">{{ data.amount|floatformat:2|intcomma }}</td>
+                                      
+                                    </tr>
+                                {% endfor %}
+                                
+                                <tr>
+                                    
+                                        <td class="border-0"></td>
+                                        <td class="border-0"></td>
+                                        <td class="border-0"></td>
+                                        <td colspan="2" class="border-0 text-end"><strong>Sub Total</strong></td>
+                                        <td class="border-0 text-end"><h5 class="m-0">
+                                                {{ sub_total|floatformat:2|intcomma }}
+                                        </h5>
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-0"></td>
+                                    <td class="border-0"></td>
+                                    <td class="border-0"></td>
+                                    <td colspan="2" class="border-0 text-end"><strong>Witholding Tax</strong></td>
+                                    <td class="border-0 text-end"><h5 class="m-0">
+                                            {{ tax|floatformat:2|intcomma }}
+                                    </h5>
+                                    </td>
+                            </tr>
+                            <tr>
+                                    
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                
+                                <td colspan="2" class="border-0 text-end"><strong>Total</strong></td>
+                                <td class="border-0 text-end"><h5 class="m-0">
+                                         {{ total|floatformat:2|intcomma }}
+                                </h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                    
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td ></td>
+                                <td ></td>
+                                <td></td>
+                                
+                            </tr>
+                            {% if pv.cheque_number  %}
+                                <tr>
+                                        
+                                    <td  > <strong>Cheque No:</strong>  </td>
+                                    <td><strong>{{pv.cheque_number }} </strong> 
+                                        
+                                        <!-- {% if pv.status == 'Authorised & Passed' and pv.cheque_number %}
+                                            <a href="{% url 'accounting:comfirm-checknumber' pv.id %}" class="btn btn-warning btn-sm waves-effect waves-light">Confirm Cheque Number {{pv.cheque_number}}</a>
+                                        {% endif %} -->
+                                            
+                                        
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>Date:</strong></td>
+                                    <td><strong>{{pv.cheque_number_date}}</strong></td>
+                                </tr>
+                            {% endif %}
+                                
+                            
+                            <tr>
+                                    
+                                <td  > <strong>Prepared By:</strong>  </td>
+                                <td><strong>{{pv.prepared_by.first_name }} {{ pv.prepared_by.last_name }}</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Warrant No:</strong></td>
+                                <td><strong>{{pv.warrant_no}}</strong></td>
+                            </tr>
+                            <tr>
+                                    
+                                <td> <strong>Recomended For Approval By:</strong>  </td>
+                                <td><strong>{{pv.authorized_by.first_name }} {{ pv.authorized_by.last_name }}</strong></td>
+                                <td></td>
+                                <td></td>
+                                
+                                <td><strong>Approved By:</strong></td>
+                                <td><strong>{{pv.approved_by.first_name }} {{ pv.approved_by.last_name }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td> <strong>Authorised & Passed For Payment By:</strong>  </td>
+                                <td><strong>{{pv.authorized_and_passed_by.first_name }} {{ pv.authorized_and_passed_by.last_name }}</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Paid By:</strong></td>
+                                <td><strong>{{pv.paid_by.first_name }} {{ pv.paid_by.last_name }}</strong></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>  
+                    {% if attachemnt %}
+                        <div class='row'>
+                            <div class="py-2 mt-3 m-2">
+                                <div class="py-2 mt-3 m-2">
+                                    
+                                    <h3 class="font-size-15 fw-bold">Attachments</h3> 
+                                
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table ">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 70px;">No.</th>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for data in attachemnt %}
+                                            <tr>
+                                                <td>{{data.id}}</td>
+                                                <td>{{data.name}}</td>
+                                            
+                                                <td>
+                                                    <a href="{% url 'accounting:view-pvattachment' data.id %}" data-bs-title="View Attachemnt" class="btn btn-sm btn-soft-info"><i class="mdi mdi-eye-outline"></i></a>
+                                                </td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                        
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>   
+                        </div>
+                
+                    {% endif %}
+                    {% if beneficiary %}
+                        <div class='row'>
+                            <div class="py-2 mt-3">
+                                <div class="">
+                                    
+                                    <h3 class="font-size-15 fw-bold">Beneficiaries</h3> 
+                                    <!-- <a class="card d-print-none text-primay" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Update Attachemt" href="{% url 'accounting:add-pv-attachment' pv.id %}" ><i class="mdi mdi-pencil-outline"></i></a> -->
+                                
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table ">
+                                    <thead>
+                                        <tr>
+                                            <th >No.</th>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>Amount Recieved</th>
+                                            <th>Balance</th>
+                                            <th>Status</th>
+                                            <!-- <th>Action</th> -->
+                                        
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for data in beneficiary %}
+                                            <tr>
+                                                <td>{{data.id}}</td>
+                                                <td>{{data.staff.last_name }} {{ data.staff.first_name }}</td>
+                                                <td> {{pv.currency_id.symbol }}  {{data.amount|floatformat:2|intcomma}}</td>
+                                                <td>{{pv.currency_id.symbol }} {{data.amount_received|floatformat:2|intcomma}}</td>
+                                                <td>{{pv.currency_id.symbol }} {{data.balance|floatformat:2|intcomma}}</td>
+                                            
+                                                <td>
+                                                    {% if data.status == 'Amount Paid' %}
+                                                        <span class="badge bg-primary">{{data.status}}</span>
+                                                    {% elif data.status == 'Recipient Notified' %}
+                                                        <span class="badge bg-warning">{{data.status}}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger">{{data.status}}</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                        
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>   
+                        </div>  
+                    {% endif %}
+                
+                    <div class="d-print-none mt-4">
+                        <div class="float-end">
+                            
+                            
+                           
+                            <a href="{% url 'accounting:paymentvoucher-list' %}" class="btn btn-primary w-md waves-effect waves-light">Close</a>
+
+                           
+                            <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+               
+           
+        {% /card %}
+        <!--end card-->
+       
+    </div>
+    <div class="col-xl-3">
+        <div class="card d-print-none">
+            <div class="card-body">
+                <div class="d-print-none mt-4">
+                    <div class="flex-shrink-0 d-flex justify-content-end mb-1" >
+                        
+                    </div>
+                    
+                </div>
+                <div class='row'>
+                    {% if minutes  %}
+                    <div class="py-2 mt-3">
+                        <h3 class="font-size-15 fw-bold">Munites/Approval</h3>
+                    </div>
+                    <div class="">
+                        <ul class="verti-timeline list-unstyled">
+                            {% for data in minutes  %}
+                                <li class="event-list">
+                                    <div class="event-timeline-dot">
+                                        <i class="bx bx-right-arrow-circle"></i>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0 me-3">
+                                            <i class="bx bx-copy-alt h2 text-primary"></i>
+                                        </div>
+                                        <div class="">
+                                            <div class="m-2">
+                                                <h5>{{data.timeline_comment}} <br>
+                                            
+                                                    {{data.timelinedate}}
+                                                 </h5>
+                                                {% if data.minutes %}
+                                                    <p class="text-muted ">{{data.minutes|title}}</p>
+                                                    {% comment %} <p class="text-muted">New common language will be more simple and regular than the existing jicnjeinjocNJONJqcljopenjqoncjenjwivnrjhinjvronjwovenwjiVPNRJWovnjiopnJVROPNJWopnjopnwjvOPNRJOPWNJVRPONWJonvjropwnJVROPNWJovnjronwjvrnjwornjvwopnvownjvon.</p> {% endcomment %}
+                                                {% endif %}
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            
+                            
+                            
+                            
+                        </ul>
+                    
+                    </div>
+                    
+                    {% endif %}
+                    
+                    
+                    <hr>
+
+                    
+                </div>
+               
+            
+            </div>
+            
+            
+           
+            
+
+            
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_content %}  
+{% #comfirmation name="approve"  %}
+    {% #avatar %}
+        <i class="bx bx-check-double"></i>     
+    {% /avatar %} 
+    {% #comfirmationtext %}
+       Are You Sure You Want To Proceed. 
+    {% /comfirmationtext %} 
+    {% #comfirmation_footer %}
+        <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Comfirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    {% /comfirmation_footer %}     
+{% /comfirmation %}
+
+{% endblock %}
+{% block extra_javascript %}
+
+<!-- Required datatable js -->
+<script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+<!-- Buttons examples -->
+<script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+
+<!-- Responsive examples -->
+<script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+<!-- Datatable init js -->
+<script src="{% static 'js/pages/datatables.init.js' %}"></script>
+
+<script src="{% static 'js/auto_modal.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+var deleteAnchors = document.getElementsByClassName("delete-record");
+var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+Array.from(deleteAnchors).forEach(function(anchor) {
+anchor.addEventListener("click", function(event) {
+event.preventDefault();
+var recordId = this.getAttribute("data-record-id"); 
+deleteModalAnchor.setAttribute("data-record-id", recordId);
+deleteModalAnchor.setAttribute("href", "/accounting/paymentvoucher/" + recordId + "/approve/");
+deleteModalAnchor.style.display = "block";
+});
+});
+}); 
+
+
+</script>
+
+
+{% endblock %}
+

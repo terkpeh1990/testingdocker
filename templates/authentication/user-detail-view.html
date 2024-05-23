@@ -1,0 +1,69 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+   
+
+    {% #modal %}
+        <h4 class="card-title mb-3">Details of Staff with ID #: {{user.staffid}}</h4>
+
+        {% #table2 %}
+            {% #tbody %}
+                    {% #tr name ="rstafid" %}
+                        {% #td name ="headstaffid" %}Staff ID :{% /td %}
+                        {% #td name ="userstaffid" %}{{user.staffid}}{% /td %}
+                    {% /tr  %}
+                    
+                    {% #tr name ="name" %}
+                        {% #td name ="headname" %}Name :{% /td %}
+                        {% #td name ="username" %}{{ user.last_name }}  {{ user.first_name }}{% /td %}
+                    {% /tr  %}
+                   
+                    {% #tr name ="rcontact" %}
+                        {% #td name ="headcontact" %}Contact :{% /td %}
+                        {% #td name ="usercontact" %}{{user.phone_number }}{% /td %}
+                    {% /tr  %}
+                    {% #tr name ="rlocation" %}
+                        {% #td name ="headlocation" %}Location :{% /td %}
+                        {% #td name ="userlocation" %}{{user.devision.name }} / {{ user.sub_division.name }}{% /td %}
+                    {% /tr  %}
+                    {% #tr name ="rgroup" %}
+                        {% #td name ="headgroup" %}Group :{% /td %}
+                        {% #td name ="usergroup" %}{{user.group }}{% /td %}
+                    {% /tr  %}
+                    {% #tr name ="rstatus" %}
+                        {% #td name ="headstatus" %}Status :{% /td %}
+                        {% #td name ="userstatus" %}
+                            {% if user.is_active %}
+                                <span class="badge bg-info">Active</span>
+                                
+                            {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                                    
+                            {% endif %}
+                        {% /td %}
+                            
+                    {% /tr  %}
+            {% /tbody %}
+        {% /table2 %}
+        {% #actions name ="districtedit" %}
+        <a href="{% url 'authentication:user-status' user.id %}" class="btn btn-soft-primary w-100">Change Status</a>
+        <a href="{% url 'authentication:edit-user' user.id %}" class="btn btn-soft-info w-100">Update</a>
+        {% /actions %}
+
+        {% #actions name ="districtedit" %}
+        <a href="{% url 'authentication:reset-password' user.id %}" class="btn btn-soft-success w-100">Password Reset</a>
+        <a href="{% url 'authentication:user-list' %}" class="btn btn-soft-danger w-100">Close</a> 
+        {% /actions %}
+        
+    {% /modal %}
+{% endblock %}

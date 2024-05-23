@@ -1,0 +1,77 @@
+{% extends 'partials/accounting/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    <div class="col-lg-12">
+       {% #card title="Payment Voucher" %}
+            <div class="m-3">
+                {% #form %}
+                    {% csrf_token %}
+                    <div class=" row mb-3">
+                            <div class="col-3 col-sm-12 col-md-3">
+                                <label for="formrow-firstname-input" class="form-label">Select Date</label>
+                                {{form.pv_date|as_crispy_field}}
+                            </div>
+                            <div class="col-3 col-sm-12 col-md-3">
+                                <label for="formrow-firstname-input" class="form-label">Select Payment Type</label>
+                                {{form.type_of_pay|as_crispy_field}}
+                            </div>
+                            <div class="col-3 col-sm-12 col-md-3">
+                                <label for="formrow-firstname-input" class="form-label">Select PV Mode</label>
+                                {{form.mode_of_pv|as_crispy_field}}
+                            </div>
+
+                            <div class="col-3 col-sm-12 col-md-3">
+                                <label for="formrow-firstname-input" class="form-label">Select Pv Type</label>
+                                {{form.type_of_pv|as_crispy_field}}
+                            </div>
+                    </div>
+                    <div class=" row mb-3">
+                        <div class="col-6 col-sm-12 col-md-6">
+                            <label for="formrow-firstname-input" class="form-label">Is Witholding Tax Applicable ?</label>
+                            {{form.withholding_tax|as_crispy_field}}
+                        </div>
+                        <div class="col-6 col-sm-12 col-md-6">
+                            <label for="formrow-firstname-input" class="form-label">If Yes, Enter Percentage (%)</label>
+                            {{form.withholding_tax_amount|as_crispy_field}}
+                        </div>
+                    </div>
+                    <div class=" row mb-3">
+                        <div class="col-4 col-sm-12 col-md-4">
+                            <label for="formrow-firstname-input" class="form-label">Select Type of Bank Accounts</label>
+                            {{form.bankaccounttype|as_crispy_field}}
+                        </div>
+                        <div class="col-4 col-sm-12 col-md-4">
+                            <label for="formrow-firstname-input" class="form-label">Select Currency</label>
+                            {{form.currency_id|as_crispy_field}}
+                        </div>
+                        <div class="col-4 col-sm-12 col-md-4">
+                            <label for="formrow-firstname-input" class="form-label">Warrant Number If Applicable</label>
+                            {{form.warrant_no|as_crispy_field}}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        {% var class=class|default:"btn btn-primary w-md" %}
+                        {% #button {% attrs class %} Proceed {% /button %}
+                    </div>
+                {% /form %}
+            
+            </div>
+        {% /card %}
+        <!--end card-->
+    </div>     
+</div>
+
+{% endblock %}
+

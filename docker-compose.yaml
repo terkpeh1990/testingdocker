@@ -1,0 +1,78 @@
+
+services:
+  web:
+    platform: linux/amd64
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - static_volume:/app/static
+    ports:
+      - "4900:4900"
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    platform: linux/amd64
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  backup:
+    platform: linux/amd64
+    image: postgres:latest
+    depends_on:
+      - db
+    volumes:
+      - backup_volume:/backups
+    env_file:
+      - .env
+    command: ["bash", "-c", "while true; do PGPASSWORD=${DB_PASSWORD} pg_dump -U ${DB_USER} -h db ${DB_NAME} > /backups/backup_$(date +%Y%m%d%H%M%S).sql; sleep 300; done"]
+    restart: always
+
+  scheduler:
+    platform: linux/amd64
+    image: alpine
+    depends_on:
+      - backup
+    volumes:
+      - backup_volume:/backups
+    environment:
+      - BACKUP_SCHEDULE=*/5 * * * *
+    command: sh -c "crond -f -d 8"
+    restart: always
+
+  email:
+    platform: linux/amd64
+    image: alpine:latest
+    depends_on:
+      - backup
+    env_file:
+      - .env
+    entrypoint: ["/bin/sh", "-c", "apk add --no-cache bash curl && while true; do sleep 3660; curl --url 'smtps://${EMAIL_HOST}:${EMAIL_PORT}' --ssl-reqd --mail-from '${EMAIL_HOST_USER}' --mail-rcpt '${EMAIL_TO}' --upload-file /backups/backup_$(date +%Y%m%d%H%M%S).sql --user '${EMAIL_HOST_USER}:${EMAIL_HOST_PASSWORD}'; done"]
+    volumes:
+      - backup_volume:/backups
+    restart: always
+        
+
+volumes:
+  postgres_data:
+  static_volume:
+  backup_volume:
+    

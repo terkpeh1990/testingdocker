@@ -1,0 +1,106 @@
+{% load static %} {% block sidebar %}
+  <!-- ========== Left Sidebar Start ========== -->
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
+      <!-- - Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
+          <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Fixed Assets</span>
+                </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                    
+                        <li>
+                            <a href="{% url 'fixedassets:assetdashboard' %}" key="t-dashboard">Dashboard</a>
+                        </li> 
+                
+                        {% if perms.fixedassets.custom_view_fixedassets %}
+                            <li>
+                                <a href="{% url 'fixedassets:asset-list' %}" key="t-assetlist">Assets</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'fixedassets:depreciation-list' %}" key="t-depreciation">Depreciation</a>
+                                
+                            </li> 
+                            <li>
+                                <a href="{% url 'fixedassets:reevaluation-list' %}" key="t-reevaluation">Revaluated Assets</a>
+                                
+                            </li> 
+                            <li>
+                                <a href="{% url 'fixedassets:disposal-list' %}" key="t-disposal">Disposed Assets</a>
+                                
+                            </li> 
+                        {% endif %}
+                        
+                    
+                    </ul>
+            </li>
+          
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Setup</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    
+                        
+                        {% if perms.fixedassets.custom_create_classification %}
+                        <li>
+                            <a href="{% url 'fixedassets:classification-list' %}" key="t-classification">Classifications</a>
+                        </li> 
+                        {% endif %} 
+                        {% if perms.fixedassets.custom_create_accounting_recognition %}
+                        <li>
+                            <a href="{% url 'fixedassets:recognition-list' %}" key="t-accountingrecognition">Accounting Recognition</a>
+                        </li> 
+                        {% endif %} 
+                        {% if perms.fixedassets.custom_create_gfscategory %}
+                        <li>
+                            <a href="{% url 'fixedassets:gfscategory-list' %}" key="t-location">GFS Category</a>
+                        </li> 
+                        {% endif %} 
+                        {% if perms.fixedassets.custom_create_IPSAS_category %}
+                        <li>
+                            <a href="{% url 'fixedassets:ipsascategory-list' %}" key="t-ipsascategory">IPSAAS Category</a>
+                        </li> 
+                        {% endif %} 
+                        {% if perms.fixedassets.custom_create_subcategory %}
+                        <li>
+                            <a href="{% url 'fixedassets:subcategory-list' %}" key="t-subcategory">Sub Category</a>
+                        </li> 
+                        {% endif %}
+                        
+                        {% if perms.fixedassets.custom_create_location %}
+                        <li>
+                            <a href="{% url 'fixedassets:location-list' %}" key="t-location">Location</a>
+                        </li> 
+                        {% endif %} 
+                        {% if perms.fixedassets.custom_create_source_of_fundings %}
+                        <li>
+                            <a href="{% url 'fixedassets:funding-list' %}" key="t-location">Source of Funding</a>
+                        </li> 
+                        {% endif %}
+                        {% if perms.fixedassets.custom_create_mothodofacquisition %}
+                        <li>
+                            <a href="{% url 'fixedassets:methodofacquisition-list' %}" key="t-methodofacquisition">Method of Acquisition</a>
+                        </li> 
+                        {% endif %}
+                        
+                </ul>
+            </li>
+            
+            
+        
+          
+          
+        </ul>
+      </div>
+      <!-- Sidebar -->
+    </div>
+  </div>
+  <!-- Left Sidebar End -->
+{% endblock %}

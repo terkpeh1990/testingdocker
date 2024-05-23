@@ -1,0 +1,188 @@
+{% extends 'partials/fixedassets/fixedassetsbase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <!-- GHC {{ asset.costbf|floatformat:2|intcomma }} -->
+        {% #stats-card  name = "totalusers" %}
+            {% #stats-card-text name="totaltext" %}
+                <p class="text-muted mb-2">Depreciation Year</p>
+                <h5 class="mb-0">
+                    
+                    {% if depreciation %}
+                        {{depreciation.accountingyear.period}}
+                    {% else %}
+                        No Current Year
+                    {% endif %}
+                        
+                    <!-- GHC 0|floatformat:2|intcomm -->
+                </h5>
+            {% /stats-card-text %}
+            {% #stats-card-avatar  name="totalav"%}
+                    <i class="bx bxs-book-bookmark"></i> 
+            {% /stats-card-avatar %}
+        {% /stats-card %}
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        {% #stats-card name = "totalactive" %}
+            {% #stats-card-text name="activetest" %}
+                <p class="text-muted mb-2">Depreciation Value</p>
+                <h5 class="mb-0">
+                    {% if depreciation %}
+                        GHC {{depreciation.depreciationvalue|floatformat:2|intcomma}}
+                    {% else %}
+                        GHC 0.00
+                    {% endif %}
+                    
+                </h5>
+            {% /stats-card-text %}
+            {% #stats-card-avatar name="activeav" %}
+                    <i class="bx bxs-note"></i> 
+            {% /stats-card-avatar %}
+        {% /stats-card %}
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        {% #stats-card  name = "totalinactive" %}
+            {% #stats-card-text name="inactivetest" %}
+                <p class="text-muted mb-2">Depreciation Status</p>
+                <h5 class="mb-0">
+                    
+                    {% if depreciation %}
+                     {{depreciation.status}}
+                    {% else %}
+                      
+                        
+                    {% endif %}
+                  
+                </h5>
+            {% /stats-card-text %}
+            {% #stats-card-avatar  name="inactiveav"%}
+                    <i class="bx bxs-message-square-dots"></i> 
+            {% /stats-card-avatar %}
+        {% /stats-card %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        {% #card title="Current Asset Depreciation List" %}
+        
+        <div class="table-responsive">
+            
+            {% #table %}
+                {% #thead %}
+                    {% #tr name ="headrow" %}
+                        {% #th name ="headid" %}ID{% /th %}
+                        
+                        {% #th name ="headName" %}Asset{% /th %}
+                        {% #th name ="headName" %}Depreciation Value{% /th %}
+                        
+                    {% /tr %}
+                {% /thead%}
+                {% #tbody %}
+                    {% for data in depreciation_detail  %}
+                        {% #tr name ="bodyrow" %}
+                            {% #td name ="groupid" %}{{data.id}}{% /td %}
+                            {% #td name ="groupname" %}{{data.asset.asset_id }} --- {{ data.asset.description}}{% /td %}
+                            {% #td name ="groupname" %}GHC {{data.depreciationvalue|floatformat:2|intcomma}}{% /td %}
+                        {% /tr %}
+                    {% endfor %}
+                {% /tbody %}
+            {% /table %}
+           
+            <!-- end table -->
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <a href="{% url 'fixedassets:depreciation-list' %}" class="btn btn-primary mt-4 ">Close</a>
+            </div>
+        
+        </div>
+        {% /card %}
+        <!--end card-->
+       
+</div>
+
+
+{% endblock %}
+
+<!-- {% block extra_content %}  
+    {% #comfirmation   %}
+        {% #avatar %}
+            <i class="mdi mdi-trash-can-outline"></i>     
+        {% /avatar %} 
+        {% #comfirmationtext %}
+            Are you sure you want to permanently delete this Assets.
+        {% /comfirmationtext %} 
+
+        {% #comfirmation_footer %}
+            <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Delete Now</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% /comfirmation_footer %}     
+    {% /comfirmation %}
+ 
+
+
+{% endblock %} -->
+
+{% block extra_javascript %}
+
+     <!-- Required datatable js -->
+     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+     <!-- Buttons examples -->
+     <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+     
+     <!-- Responsive examples -->
+     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+     <!-- Datatable init js -->
+     <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+     
+    {% comment %} <script src="{% static 'js/auto_modal.js' %}"></script> {% endcomment %}
+
+     <!-- <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record");
+            var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id"); 
+                deleteModalAnchor.setAttribute("data-record-id", recordId);
+                deleteModalAnchor.setAttribute("href", "/fixedassets/assets/" + recordId + "/delete/");
+                deleteModalAnchor.style.display = "block";
+              });
+            });
+          });
+     </script> -->
+
+{% endblock %}

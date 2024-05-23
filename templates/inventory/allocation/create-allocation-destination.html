@@ -1,0 +1,210 @@
+{% extends 'partials/inventory/inventorybase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    <div class="col-xl-3">
+        {% #card  %}
+            <h5 class="fw-semibold">Overview</h5>
+            {% #table2 %}
+                {% #tbody %}
+                        {% #tr name ="rstafid" %}
+                            {% #td name ="headid" %}Allocation ID :{% /td %}
+                            {% #td name ="restockid" %}{{allocation.id}}{% /td %}
+                        {% /tr  %}
+                        
+                        {% #tr name ="name" %}
+                            {% #td name ="headdate" %}Date :{% /td %}
+                            {% #td name ="username" %}{{ allocation.allocation_date }}{% /td %}
+                        {% /tr  %}
+                        {% #tr name ="name" %}
+                            {% #td name ="headsupplier" %}Description :{% /td %}
+                            {% #td name ="username" %}{{ allocation.description }}{% /td %}
+                        {% /tr  %}
+                    
+                        
+                        {% #tr name ="rii" %}
+                            {% #td name ="headi" %}Institution :{% /td %}
+                            {% #td name ="ins" %}{{allocation.tenant_id.name }}{% /td %}
+                        {% /tr  %}
+                        
+                       
+                {% /tbody %}
+            {% /table2 %}
+          
+            {% #actions name ="districtedit" %}
+            
+            <a href="{% url 'inventory:allocation-list' %}" class="btn btn-soft-primary w-100">Close</a>
+            {% /actions %}
+        {% /card  %}
+        
+    </div>
+    <div class="col-xl-9">
+        
+         
+        {% #card  %}
+        
+            <div class="row mb-2">
+                {% #form %}
+                    {% csrf_token %}
+                        <div class=" row mb-3">
+                            
+                            <div class="col-6 col-sm-12 col-md-6">
+                                <label for="formrow-firstname-input" class="form-label">Devision</label>
+                                {{form.devision|as_crispy_field}}
+                            </div>
+                            <div class="col-6 col-sm-12 col-md-6">
+                                <label for="formrow-firstname-input" class="form-label">Select Classification</label>
+                                {{form.classification|as_crispy_field}}
+                            </div>
+                            
+                        </div>
+                        <div class="mb-2">
+                            {% var class=class|default:"btn btn-primary w-md" %}
+                            {% #button {% attrs class %} Pull Sub Devisions {% /button %}
+                        </div>
+                {% /form %}
+            </div>
+       
+            <div class="row">
+               
+                <div class="table-responsive">
+                    
+                    
+                    {% #table %}
+                        {% #thead %}
+                            {% #tr name ="headrow" %}
+                                {% #th name ="headid" %}ID{% /th %}
+                                {% #th name ="headdev" %}Devision{% /th %}
+                                {% #th name ="headsub" %}Sub Devision{% /th %}        
+                                {% if perms.inventory.custom_create_allocation  %}
+                                    {% #th name ="headAction" %} Action {% /th %}
+                                {% endif %}
+                            {% /tr %}
+                        {% /thead%}
+                        {% #tbody %}
+                            {% for data in detail  %}
+                                {% #tr name ="bodyrow" %}
+                                {% #td name ="id" %}{{data.id}}{% /td %}
+                                    {% #td name ="dev" %}{{data.devision.name}}{% /td %}
+                                    {% #td name ="sub" %}{{data.sub_division.name}}{% /td %}
+                                    {% if perms.inventory.custom_create_allocation  %}
+                                        {% #td name ="districtaction" %}
+                                        
+                                            {% #actions name ="districtedit" %}
+                                               
+                                                        <li data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Items">
+                                                            <a href="{% url 'inventory:add-destination-item' data.id %}" class="btn btn-sm btn-soft-primary"><i class="mdi mdi-pencil-outline"></i></a>
+                                                        </li>
+                                               
+                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove">
+                                                        <a href="{% url 'inventory:delete-allocation-destination' data.id %}" class="btn btn-sm btn-soft-danger"><i class="mdi mdi-delete-outline"></i></a>
+                                                       
+                                                    </li>
+                                            
+                                               
+                                            {% /actions %}
+        
+                                        {% /td %}
+                                    {% endif %}
+                                {% /tr %}
+                            {% endfor %}
+                        {% /tbody %}
+                    {% /table %}
+                    <div class="mb-2 col-3">
+                        <a href="#delete_link" id="delete-record" data-record-id="{{ allocation.id }}" data-bs-toggle="modal" class="delete-record btn btn-soft-info w-100" data-target="#jobDelete">Comfirm</a>
+                    </div>
+                    
+                    <!-- end table -->
+                </div>
+            </div>
+                
+           
+        {% /card %}
+                <!--end card-->
+               
+      
+        
+    </div>
+    
+</div>
+
+
+{% endblock %}
+
+{% block extra_content %}  
+    {% #comfirmation name="approve"  %}
+        {% #avatar %}
+            <i class="bx bx-check-double"></i>     
+        {% /avatar %} 
+        {% #comfirmationtext %}
+            Are you sure you want to comfirm allocation to this devision?
+        {% /comfirmationtext %} 
+        {% #comfirmation_footer %}
+            <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Comfirm Now</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% /comfirmation_footer %}     
+    {% /comfirmation %}
+ 
+   
+
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+     <!-- Required datatable js -->
+     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+     <!-- Buttons examples -->
+     <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+     
+     <!-- Responsive examples -->
+     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+     <!-- Datatable init js -->
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record");
+            var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id"); 
+                deleteModalAnchor.setAttribute("data-record-id", recordId);
+                deleteModalAnchor.setAttribute("href", "/inventory/allocation/" + recordId + "/destination/release/");
+                deleteModalAnchor.style.display = "block";
+              });
+            });
+          });
+
+        
+     </script>
+     
+{% endblock %}

@@ -1,0 +1,164 @@
+
+
+{% extends 'partials/accounting/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+        
+            {% #stats-card  name = "totalusers" %}
+                {% #stats-card-text name="totaltext" %}
+                    <p class="text-muted mb-2">Amount Payable</p>
+                    <h5 class="mb-0">{{totals}}</h5>
+                {% /stats-card-text %}
+                {% #stats-card-avatar  name="totalav"%}
+                        <i class="bx bxs-book-bookmark"></i> 
+                {% /stats-card-avatar %}
+            {% /stats-card %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            {% #stats-card name = "totalactive" %}
+                {% #stats-card-text name="activetest" %}
+                    <p class="text-muted mb-2">Amount Paid</p>
+                    <h5 class="mb-0">{{amount_receiveds}}</h5>
+                {% /stats-card-text %}
+                {% #stats-card-avatar name="activeav" %}
+                        <i class="bx bxs-note"></i> 
+                {% /stats-card-avatar %}
+            {% /stats-card %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            {% #stats-card  name = "totalinactive" %}
+                {% #stats-card-text name="inactivetest" %}
+                    <p class="text-muted mb-2">Balance</p>
+                    <h5 class="mb-0">{{balances}}</h5>
+                {% /stats-card-text %}
+                {% #stats-card-avatar  name="inactiveav"%}
+                        <i class="bx bxs-message-square-dots"></i> 
+                {% /stats-card-avatar %}
+            {% /stats-card %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% #card title="List Of Beneficiaries" %}
+            
+            <div class="table-responsive">
+            
+                
+                {% #table %}
+                    {% #thead %}
+                        {% #tr name ="headrow" %}
+                            {% #th name ="headstaffid" %}ID{% /th %}
+                            {% #th name ="headstaffid" %}Staff ID{% /th %}
+                            {% #th name ="headname" %}Name{% /th %}
+                            {% #th name ="headname" %}Amount{% /th %}
+                            {% #th name ="headname" %}Amount Paid{% /th %}
+                            {% #th name ="headname" %}Balance{% /th %}
+                            {% #th name ="headname" %}Action{% /th %}
+                        
+                        {% /tr %}
+                    {% /thead%}
+                    {% #tbody %}
+                        {% for data in beneficiary  %}
+                            {% #tr name ="bodyrow" %}
+                                
+                                {% #td name ="userstaffid" %}{{data.id}}{% /td %}
+                                {% #td name ="userstaffid" %}{{data.staff.staffid}}{% /td %}
+                                {% #td name ="username" %}{{data.staff.last_name  }} {{  data.staff.first_name}}{% /td %}
+                                {% #td name ="userlocation" %}{{data.amount}}{% /td %}
+                                {% #td name ="userlocation" %}{{data.amount_received}}{% /td %}
+                                {% #td name ="userlocation" %}{{data.balance}}{% /td %}
+                                
+                                    {% #td name ="districtaction" %}
+                                    
+                                        {% #actions name ="districtedit" %}
+                                        
+                                        {% if data.balance > 0.00 %}
+                                            <li data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Comfirm Beneficiary">
+                                                <a href="{% url 'accounting:comfirm-code' data.id %}" class="btn btn-sm btn-soft-primary"><i class="mdi mdi-eye-outline"></i></a>
+                                            </li>
+                                        {% endif %}
+                                            
+                                                    
+                                        {% /actions %}
+
+                                    {% /td %}
+                                
+                            {% /tr %}
+                        {% endfor %}
+                    {% /tbody %}
+                {% /table %}
+            
+                <!-- end table -->
+            </div>
+            {% /card %}
+            <!--end card-->
+        
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_javascript %}
+
+     <!-- Required datatable js -->
+     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+     <!-- Buttons examples -->
+     <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+     
+     <!-- Responsive examples -->
+     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+     <!-- Datatable init js -->
+     <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+     
+    {% comment %} <script src="{% static 'js/auto_modal.js' %}"></script> {% endcomment %}
+
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record");
+            var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id"); 
+                deleteModalAnchor.setAttribute("data-record-id", recordId);
+                deleteModalAnchor.setAttribute("href", "/authentication/user/" + recordId + "/delete/");
+                deleteModalAnchor.style.display = "block";
+              });
+            });
+          });
+     </script>
+
+{% endblock %}

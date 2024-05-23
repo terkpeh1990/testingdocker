@@ -1,0 +1,27 @@
+components:
+  card: "partials/UI/card.html"
+  modal: "partials/UI/modal.html"
+  table: "partials/UI/table.html"
+  thead: "partials/UI/thead.html"
+  th: "partials/UI/th.html"
+  tr: "partials/UI/tr.html"
+  td: "partials/UI/td.html"
+  tbody: "partials/UI/tbody.html"
+  actions: "partials/UI/actions.html"
+  form: "partials/UI/form.html"
+  button: "partials/UI/button.html"
+  comfirmation: "partials/UI/comfirmation.html"
+  avatar: "partials/UI/avatar.html"
+  comfirmationtext: "partials/UI/comfirmationtext.html"
+  comfirmation_footer: "partials/UI/comfirmation_footer.html"
+  stats-card: "partials/UI/stats-card.html"
+  stats-card-text: "partials/UI/stats-card-text.html"
+  stats-card-avatar: "partials/UI/stats-card-avatar.html"
+  status: "partials/UI/status.html"
+  table2: "partials/UI/table2.html"
+  cancelcomfirmation: "partials/UI/cancelcomfirmation.html"
+
+
+
+
+  

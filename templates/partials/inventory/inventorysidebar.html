@@ -1,0 +1,192 @@
+{% load static %} {% block sidebar %}
+  <!-- ========== Left Sidebar Start ========== -->
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
+      <!-- - Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
+          {% if perms.inventory.custom_view_product %}
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Products</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                   
+                {% if perms.inventory.custom_view_category %}
+                        <li>
+                            <a href="{% url 'inventory:category-list' %}" key="t-category">Categories</a>
+                        </li> 
+                    {% endif %}
+                    {% if perms.inventory.custom_view_brand %}
+                        <li>
+                            <a href="{% url 'inventory:brand-list' %}" key="t-brand">Brands</a>
+                        </li> 
+                    {% endif %}
+                    {% if perms.inventory.custom_view_measuremnt %}
+                        <li>
+                            <a href="{% url 'inventory:measurement-list' %}" key="t-measurement">Unit of Measurement</a>
+                        </li> 
+                    {% endif %}
+                    {% if perms.inventory.custom_view_product %}
+                        <li>
+                            <a href="{% url 'inventory:product-list' %}" key="t-product">Products</a>
+                        </li> 
+                       
+                    {% endif %}
+                    {% if perms.inventory.custom_view_supplier %}
+                        <li>
+                            <a href="{% url 'inventory:supplier-list' %}" key="t-supplier">Suppliers</a>
+                        </li> 
+                    {% endif %}
+                    
+                    
+                    {% if perms.inventory.custom_view_product %}
+                        <li>
+                            <a href="{% url 'inventory:closing-stock' %}" key="t-product">Closing Stock</a>
+                        </li> 
+                       
+                    {% endif %}
+                    
+                </ul>
+            </li>
+          {% endif %}
+          {% if perms.inventory.custom_view_job_certification %}
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Certififactions</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    
+                {% if perms.inventory.custom_view_restock %}
+                    <li>
+                        <a href="{% url 'inventory:restock-list' %}" key="t-product">Consumable</a>
+                    </li> 
+                {% endif %}
+                {% if perms.inventory.custom_view_job_certification %}
+                    <li>
+                        <a href="{% url 'inventory:job-list' %}" key="t-product">Capital</a>
+                    </li> 
+                {% endif %}
+                
+                </ul>
+            </li>
+          {% endif %}
+          
+          {% if perms.inventory.custom_view_requisition %}
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bx-pyramid"></i>
+              <span key="t-products">Requisitions</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                
+               
+                {% if perms.inventory.custom_view_requisition %}
+                    <li>
+                        <a href="{% url 'inventory:personnal-requisition-list' %}" key="t-product">Requisition</a>
+                    </li> 
+                {% endif %}
+                {% if perms.inventory.custom_approve_requisition %}
+                    <li>
+                        <a href="{% url 'inventory:pending-requisition-list' %}" key="t-product">Pending Requisition</a>
+                    </li> 
+                {% endif %}
+                
+                {% if perms.inventory.custom_approve_capital_requisition %}
+                    <li>
+                        <a href="{% url 'inventory:awaiting-capital-requisition-list' %}" key="t-product">Awaiting Requisition</a>
+                    </li> 
+                {% endif %}
+                {% if perms.inventory.custom_approve_consumable_requisition %}
+                    <li>
+                        <a href="{% url 'inventory:awaiting-consumable-requisition-list' %}" key="t-product">Awaiting Requisition</a>
+                    </li> 
+                {% endif %}
+                {% if perms.inventory.custom_issue_requisition %}
+                    <li>
+                        <a href="{% url 'inventory:approved-requisition-list' %}" key="t-product">Approved Requisition</a>
+                    </li> 
+                {% endif %}
+               
+                
+            </ul>
+          </li>
+          {% endif %}
+          {% if perms.inventory.custom_view_allocation%}
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bx-infinite"></i>
+              <span key="t-products">Allocations</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                
+               
+                {% if perms.inventory.custom_view_allocation%}
+                    <li>
+                        <a href="{% url 'inventory:allocation-list' %}" key="t-product">Allocation</a>
+                    </li> 
+                {% endif %}
+               
+                
+            </ul>
+          </li>
+          {% endif %}
+          {% if perms.authentication.custom_view_report %}
+          <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+              <i class="bx bx-analyse"></i>
+              <span key="t-products">Reports</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                
+               
+                {% if perms.authentication.custom_view_report %}
+                    <li>
+                        <a href="{% url 'inventory:report-requisition' %}" key="t-req">Requisition</a>
+                    </li> 
+                {% endif %}
+                {% if perms.authentication.custom_view_report %}
+                    <li>
+                        <a href="{% url 'inventory:devisional-statistics' %}" key="t-dev">Devisional Requisition Stats</a>
+                    </li> 
+                {% endif %}
+                {% if perms.authentication.custom_view_report %}
+                    <li>
+                        <a href="{% url 'inventory:sub-devisional-statistics' %}" key="t-sub">Sub Devisional Requisition Stats</a>
+                    </li> 
+                {% endif %}
+                {% if perms.authentication.custom_view_report %}
+                    <li>
+                        <a href="{% url 'inventory:low-stock-alert' %}" key="t-product">Low Stock</a>
+                    </li> 
+                {% endif %}
+                {% if perms.authentication.custom_view_report %}
+                    <li>
+                        <a href="{% url 'inventory:expire-products' %}" key="t-product">Expiring Product Alert</a>
+                    </li> 
+                {% endif %}
+                <!-- {% if perms.authentication.custom_view_report %}
+                        
+                    <li>
+                        <a href="{% url 'inventory:aviable-assets' %}" key="t-product">Avialable Assets</a>
+                    </li> 
+                {% endif %} -->
+                {% if perms.authentication.custom_view_report %}
+                    <li>
+                        <a href="{% url 'inventory:assigned-assets' %}" key="t-product">Assigned Assets</a>
+                    </li> 
+                {% endif %}
+            </ul>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      <!-- Sidebar -->
+    </div>
+  </div>
+  <!-- Left Sidebar End -->
+{% endblock %}

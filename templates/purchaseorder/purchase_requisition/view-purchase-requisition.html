@@ -1,0 +1,271 @@
+{% extends 'partials/purchaseorder/purchasebase.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+<div class="row">
+    <div class="col-xl-3">
+        {% #card  %}
+        
+            
+                <img  src="{% static 'images/brands/logo.png'%}" alt="" class="img-fluid">
+           
+            <br>
+            <br>
+            <h5 class="'mt-4" class="fw-semibold">Overview</h5>
+            {% #table2 %}
+                {% #tbody %}
+                {% #tr name ="rstafid" %}
+                {% #td name ="headid" %} ID :{% /td %}
+                {% #td name ="restockid" %}{{purchase_requisition.id}}{% /td %}
+            {% /tr  %}
+            
+            {% #tr name ="name" %}
+                {% #td name ="headdate" %}Date :{% /td %}
+                {% #td name ="username" %}{{ purchase_requisition.purchase_requisition_date }}{% /td %}
+            {% /tr  %}
+            {% #tr name ="name" %}
+                {% #td name ="headsupplier" %}Product :{% /td %}
+                {% #td name ="username" %}{{ purchase_requisition.product_id.name }}{% /td %}
+            {% /tr  %}
+        
+            {% #tr name ="rdriver" %}
+                {% #td name ="headdriver" %}Quantity :{% /td %}
+                {% #td name ="userdriver" %}{{purchase_requisition.quantity }}{% /td %}
+            {% /tr  %}
+            {% #tr name ="rcontact" %}
+                {% #td name ="headcontact" %}Total Amount :{% /td %}
+                {% #td name ="contact" %}{{purchase_requisition.total_amount }}{% /td %}
+            {% /tr  %}
+            
+            
+            {% #tr name ="rstatus" %}
+                {% #td name ="headstatus" %}Status :{% /td %}
+                {% #td name ="userstatus" %}
+                {% if purchase_requisition.status == 'Pending' %}
+                    <span class="badge bg-info">{{purchase_requisition.status}}</span>
+                {% elif purchase_requisition.status == 'Approved'  %}
+                    <span class="badge bg-success">{{purchase_requisition.status}}</span>
+                {% else %}
+                    <span class="badge bg-danger">{{purchase_requisition.status}}</span>
+                        
+                {% endif %}
+                {% /td %}
+                    
+            {% /tr  %}
+                {% /tbody %}
+            {% /table2 %}
+            {% #actions name ="districtedit" %}
+                {% if purchase_requisition.status == 'Pending' %}
+                    <a href="#delete_link" id="delete-record" data-record-id="{{ purchase_requisition.id }}" data-bs-toggle="modal" class="delete-record btn btn-soft-success w-100" data-target="#jobDelete">Approve</a> 
+                    <a href="{% url 'purchaseorder:cancel-purchase-requisition' purchase_requisition.id %}" class="btn btn-soft-danger w-100">Cancel</a>
+                {% endif %}
+                {% if purchase_requisition.release and not purchase_requisition.status == 'LPO Created' %}
+                    <a href="{% url 'purchaseorder:new-lpo'  purchase_requisition.id %}" class="btn btn-soft-warning w-100">Create LPO</a>
+                {% endif %}
+                
+                <a href="{% url 'purchaseorder:purchase-requisition-list' %}" class="btn btn-soft-primary w-100">Close</a>
+
+            {% /actions %}
+            
+        {% /card  %}
+        
+    </div>
+    <div class="col-xl-9">
+        
+         
+        {% #card  %}
+            <div class="row">
+                <div class="col-sm-12 d-flex justify-content-end mb-4" >
+                    <img src="{% static 'images/brands/logo.png'%}" alt="" class="img-fluid">
+                </div>
+                <br>
+                <br>
+            </div>
+            <div class="row">
+                <div class="table-responsive">
+                    
+                    
+                    {% #table %}
+                        {% #thead %}
+                            {% #tr name ="headrow" %}
+                                
+                                {% #th name ="headid" %}Supplier {% /th %}
+                                {% #th name ="headname" %}Qoutation{% /th %}
+                                {% #th name ="headbrand" %}Status{% /th %}
+                                {% #th name ="headdes" %}Reason{% /th %}
+                                
+                              
+                                {% #th name ="headAction" %} Action {% /th %}
+                                
+                            {% /tr %}
+                        {% /thead%}
+                        {% #tbody %}
+                            {% for data in suppliers  %}
+                                {% #tr name ="bodyrow" %}
+                                    
+                                    {% #td name ="id" %}{{data.supplier_id.name}}{% /td %}
+                                    {% #td name ="product" %}{{data.amount}}{% /td %}
+                                    
+                                    {% #td name ="status" %}
+                                        {% if data.status == 'Selected' %}
+                                            <span class="badge bg-info">{{data.status}}</span>
+                                        
+                                        {% else %}
+                                            <span class="badge bg-danger">{{data.status}}</span>
+                                                
+                                        {% endif %}
+                                    
+                                    {% /td %}
+                                    
+                                    {% #td name ="des" %}{{data.reason  }}{% /td %}
+                                    
+                                    
+                                        {% #td name ="districtaction" %}
+                                            
+                                            {% #actions name ="districtedit" %}
+                                                  {% if purchase_requisition.status == 'Approved' %}
+                                                        {% if data.status is None %}
+                                                            <a href="{% url 'purchaseorder:quotation-form' data.id %}" class="btn btn-soft-primary w-100">Quotation</a>
+                                                            <a href="{% url 'purchaseorder:approve-quotation' data.id %}" class="btn btn-soft-warning w-100">Approve</a>
+                                                            <a href="{% url 'purchaseorder:reject-quotation' data.id %}" class="btn btn-soft-danger w-100">Reject</a>
+                                                        {% endif %}
+                                                  {% endif %}
+                                            {% /actions %}
+        
+                                        {% /td %}
+                                    
+                                {% /tr %}
+                            {% endfor %}
+                        {% /tbody %}
+                    {% /table %}
+                    
+                    <!-- end table -->
+                </div>
+            </div>
+           
+                <div class="row">
+                    
+                    <div class="col-3">
+                        <a href="{% url 'purchaseorder:complete-supplier-selection' purchase_requisition.id %}" class="btn btn-soft-primary w-100">Comfirm Supplier Selection</a>
+                    </div>
+
+                </div>
+            
+                
+           
+        {% /card %}
+                <!--end card-->
+               
+      
+        
+    </div>
+    
+</div>
+
+
+{% endblock %}
+
+{% block extra_content %}  
+    {% #comfirmation name="approve"  %}
+        {% #avatar %}
+            <i class="bx bx-check-double"></i>     
+        {% /avatar %} 
+        {% #comfirmationtext %}
+            Are you sure you want to approve this purchase Requisition
+        {% /comfirmationtext %} 
+        {% #comfirmation_footer %}
+            <a href="#" id ="deleteModalAnchor" class="btn btn-danger">Approve Now</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% /comfirmation_footer %}     
+    {% /comfirmation %}
+ 
+    {% #cancelcomfirmation name= "cancel"  %}
+        {% #avatar %}
+            <i class="mdi mdi-trash-can-outline"></i>     
+        {% /avatar %} 
+        {% #comfirmationtext %}
+            Are you sure you want to Cancel this Purchase Requisition
+        {% /comfirmationtext %} 
+        {% #comfirmation_footer %}
+            <a href="#" id ="deleteModalAnchor1" class="btn btn-danger">Cancel Now</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% /comfirmation_footer %}     
+    {% /cancelcomfirmation %}
+ 
+
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+     <!-- Required datatable js -->
+     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+     <!-- Buttons examples -->
+     <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+     <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+     <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+     
+     <!-- Responsive examples -->
+     <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+     <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+     <!-- Datatable init js -->
+     <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+     
+    {% comment %} <script src="{% static 'js/auto_modal.js' %}"></script> {% endcomment %}
+
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record");
+            var deleteModalAnchor = document.getElementById("deleteModalAnchor");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id"); 
+                deleteModalAnchor.setAttribute("data-record-id", recordId);
+                deleteModalAnchor.setAttribute("href", "/purchaseorder/approve_purchase_requisition/" + recordId + "/approve/");
+                deleteModalAnchor.style.display = "block";
+              });
+            });
+          });
+          document.addEventListener("DOMContentLoaded", function() {
+            var deleteAnchors = document.getElementsByClassName("delete-record1");
+            var deleteModalAnchor1 = document.getElementById("deleteModalAnchor1");
+            Array.from(deleteAnchors).forEach(function(anchor) {
+              anchor.addEventListener("click", function(event) {
+                event.preventDefault();
+                var recordId = this.getAttribute("data-record-id1"); 
+                deleteModalAnchor1.setAttribute("data-record-id1", recordId);
+                deleteModalAnchor1.setAttribute("href", "/purchaseorder/approve_purchase_requisition/" + recordId1 + "/cancel/");
+                deleteModalAnchor1.style.display = "block";
+              });
+            });
+          });
+     </script>
+
+{% endblock %}

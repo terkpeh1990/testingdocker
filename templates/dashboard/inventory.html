@@ -1,0 +1,424 @@
+{% extends 'partials/inventory/inventorybase.html' %}
+{% load static %}
+{% block contents %}
+                        <div class="row">
+
+                            <div class="col-xl-8">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="card mini-stats-wid">
+                                            <div class="card-body">
+                                                
+                                                <div class="d-flex flex-wrap">
+                                                    <div class="me-3">
+                                                        <p class="text-muted mb-2">Total Requisition</p>
+                                                        <h5 class="mb-0">{{total_requisition}}</h5>
+                                                    </div>
+    
+                                                    <div class="avatar-sm ms-auto">
+                                                        <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                                            <i class="bx bxs-book-bookmark"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-4">
+                                        <div class="card blog-stats-wid">
+                                            <div class="card-body">
+
+                                                <div class="d-flex flex-wrap">
+                                                    <div class="me-3">
+                                                        <p class="text-muted mb-2">Comsumable Requisition</p>
+                                                        <h5 class="mb-0">{{total_consumable}}</h5>
+                                                    </div>
+    
+                                                    <div class="avatar-sm ms-auto">
+                                                        <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                                            <i class="bx bxs-note"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card blog-stats-wid">
+                                            <div class="card-body">
+                                                <div class="d-flex flex-wrap">
+                                                    <div class="me-3">
+                                                        <p class="text-muted mb-2">Asset Requisition</p>
+                                                        <h5 class="mb-0">{{total_capital}}</h5>
+                                                    </div>
+    
+                                                    <div class="avatar-sm ms-auto">
+                                                        <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                                            <i class="bx bxs-message-square-dots"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end row -->
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap align-items-start">
+                                            <h5 class="card-title me-2 mb-2">Top 10 Requisition</h5>
+                                           
+                                        </div>
+                                        <div class="table-responsive mt-2">
+                                            {% #table %}
+                                                    {% #thead %}
+                                                        {% #tr %}
+                                                            {% #th scope="col" colspan="2" %} Batch Number {% /th %}
+                                                            {% #th scope="col" %} Classification{% /th %}
+                                                            {% comment %} {% #th scope="col" %} Action{% /th %} {% endcomment %}
+                                                        {% /tr %}
+                                                    {% /thead %}
+                                                    {% #tbody %}
+                                                    {% for data in current_req %}
+                                                        {% #tr %}
+                                                                            
+                                                                {% #td %}
+                                                                    <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">{{data.id}}</a></h5>
+                                                                    <p class="text-muted mb-0">
+                                                                        {% if data.status == 'Pending' %}
+                                                                            <span class="badge bg-info">{{data.status}}</span>
+                                                                        {% elif data.status == 'Approved'  %}
+                                                                            <span class="badge bg-success">{{data.status}}</span>
+                                                                        {% elif data.status == 'Awaiting Approval' or data.status == "Autorized" %}
+                                                                            <span class="badge bg-warning">{{data.status}}</span>
+                                                                        {% elif data.status == 'Issued'  %}
+                                                                            <span class="badge bg-primary">{{data.status}}</span>
+                                                                        {% else %}
+                                                                            <span class="badge bg-danger">{{data.status}}</span>   
+                                                                        {% endif %}
+                                                                    </p>
+                                                                {% /td %}
+                                                                {% #td %}<i class="bx bx-like align-middle me-1"></i> {{data.classification}}{% /td %}
+                                                              
+                                                        {% /tr %}
+                                                   {% endfor %}
+                                                            
+                                                    {% /tbody %}
+                                            {% /table %}
+                                            
+                                              
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <!-- end col -->
+
+                            <div class="col-xl-4">
+                                
+                                {% if product_list == 0 %}
+                                {% else %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex">
+                                                        <div class="flex-grow-1">
+                                                            <div class="text-muted text-truncate">
+                                                                <h5 class="mb-2">Total Items</h5>
+                                                                <h3 class="mb-0">{{total_products}}</h3>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+
+                                                    <hr>
+
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted text-truncate mb-2">Consumables</p>
+                                                                <h5 class="mb-0">{{total_consumable_products}}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted text-truncate mb-2">Assets</p>
+                                                                <h5 class="mb-0">{{total_capital_products}}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                {% endif %}
+                                    
+                               
+                                
+                                
+                                {% if low_stock == 0  %}
+                                {% else %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap align-items-start">
+                                                
+                                            
+                                                
+                                            <h5 class="card-title mb-3 me-2">Low Stock Alert</h5>
+
+                                            <div class="dropdown ms-auto">
+                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                                    <i class="mdi mdi-dots-horizontal"></i>
+                                                </a>
+                                            
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a class="dropdown-item" href="{% url 'inventory:low-stock-alert' %}">View</a>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <p class="text-muted mb-1">Total of Products Low on Stock</p>
+                                                <h4 class="mb-3">{{low_stock_count}}</h4>
+                                                {% comment %} <p class="text-success mb-0"><span>0.6 % <i class="mdi mdi-arrow-top-right ms-1"></i></span></p> {% endcomment %}
+                                            </div>
+                                            <div class="ms-auto align-self-end">
+                                                <i class="bx bx-group display-4 text-light"></i>
+                                            </div>
+                                        </div>
+                                      
+
+                                       
+                                    </div>
+                                </div>
+                                
+                                    
+                                {% endif %}
+                                    
+
+                                
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="me-2">
+                                                    <h5 class="card-title mb-4">Requisition Based of Status</h5>
+                                                </div>
+                                                
+                                            </div>
+                                            <div data-simplebar class="mt-2" style="max-height: 280px;">
+                                                <ul class="verti-timeline list-unstyled">
+                                                    {% for data in requisition_status %}
+                                                        <li class="event-list active">
+                                                            <div class="event-timeline-dot">
+                                                                {% if data.status == "Pending" %}
+                                                                    <i class="bx bxs-right-arrow-circle font-size-18 text-info bx-fade-right"></i>
+                                                                {% elif data.status == 'Approved'  %}
+                                                                    <i class="bx bxs-right-arrow-circle font-size-18 text-success bx-fade-right"></i>
+                                                                {% elif data.status == 'Awaiting Approval' or data.status == "Autorized" %}
+                                                                    <i class="bx bxs-right-arrow-circle font-size-18 text-warning bx-fade-right"></i>
+                                                                {% elif status.status == 'Issued'  %}
+                                                                    <i class="bx bxs-right-arrow-circle font-size-18 text-primary bx-fade-right"></i>
+                                                                {% else %}
+                                                                  <i class="bx bxs-right-arrow-circle font-size-18 text-danger bx-fade-right"></i>
+                                                                {% endif %}  
+    
+                                                            </div>
+                                                            <div class="d-flex">
+                                                                <div class="flex-shrink-0 me-3">
+                                                                    {% if data.status == "Pending" %}
+                                                                        <h5 class="font-size-14">{{data.status}} <i class="bx bx-right-arrow-alt font-size-16 text-info align-middle ms-2"></i></h5>
+                                                                    {% elif data.status == 'Approved'  %}
+                                                                        <h5 class="font-size-14">{{data.status}} <i class="bx bx-right-arrow-alt font-size-16 text-success align-middle ms-2"></i></h5>
+                                                                    {% elif data.status == 'Awaiting Approval' or data.status == "Autorized" %}
+                                                                        <h5 class="font-size-14">{{data.status}} <i class="bx bx-right-arrow-alt font-size-16 text-warning align-middle ms-2"></i></h5>
+                                                                    {% elif status.status == 'Issued'  %}
+                                                                        <h5 class="font-size-14">{{data.status}} <i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
+                                                                    {% else %}
+                                                                        <h5 class="font-size-14">{{data.status}} <i class="bx bx-right-arrow-alt font-size-16 text-danger align-middle ms-2"></i></h5>
+                                                                    {% endif %}
+                                                                    
+                                                                </div>
+                                                                <div class="flex-grow-1">
+                                                                    <div>
+                                                                        Total <span class="fw-semibold">{{data.total}}</span> 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                
+                                                    
+                                                </ul>
+                                            </div>
+                                            
+                                            {% comment %} <div class="text-center mt-4"><a href="javascript: void(0);" class="btn btn-primary waves-effect waves-light btn-sm">View More <i class="mdi mdi-arrow-right ms-1"></i></a></div> {% endcomment %}
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                
+                               
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-xl-8 col-lg-8">
+                                <div class="card">
+                                    {% if comsumable_expire == 0 %}
+                                    <!-- <div class="card-header bg-transparent border-bottom">
+                                        <div class="d-flex flex-wrap align-items-start">
+                                            <div class="me-2">
+                                                <h5 class="card-title mt-1 mb-0">You are authorize to see this data</h5>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div> -->
+                                    {% else %}
+                                    <div class="card-header bg-transparent border-bottom">
+                                        <div class="d-flex flex-wrap align-items-start">
+                                            <div class="me-2">
+                                                <h5 class="card-title mt-1 mb-0">Inventory Batches</h5>
+                                            </div>
+                                            <ul class="nav nav-tabs nav-tabs-custom card-header-tabs ms-auto" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-bs-toggle="tab" href="#post-recent" role="tab">
+                                                        Closed to Expire/Expired
+                                                    </a>
+                                                </li>
+                                                
+                                            </ul>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="card-body">
+
+                                        <div data-simplebar style="max-height: 295px;">
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="post-recent" role="tabpanel">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for data in comsumable_expire %}
+                                                            <li class="list-group-item py-3">
+                                                                <div class="d-flex">
+                                                                    
+                                                                    
+                                                                    <div class="align-self-center overflow-hidden me-auto">
+                                                                        <div>
+                                                                            <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">{{data.batch_number}} ---- {{ data.inventory_id.product_id.name}}</a></h5>
+                                                                            <p class="text-muted mb-0">{{data.expiring_date}}</p>
+                                                                        </div>
+                                                                    </div>
+                    
+                                                                
+                                                                </div>
+                                                            </li>
+                                                        {% endfor %}
+                                                        
+                                                       
+                                                        <!-- <li class="list-group-item py-3">
+                                                            <div class="text-center mt-4"><a href="{% url 'inventory:expire-products' %}" class="btn btn-primary waves-effect waves-light btn-sm">View All <i class="mdi mdi-arrow-right ms-1"></i></a></div>
+                                                        </li> -->
+
+
+
+                                                       
+                                                    </ul>
+                                                </div>
+                                                <!-- end tab pane -->
+
+                                                
+                                                <!-- end tab pane -->
+                                            </div>
+                                            <!-- end tab content -->
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                   
+                                </div>
+                            </div>
+                            <!-- end col -->
+                            
+                           
+                        <!-- end row -->
+                               
+
+                        <div class="row">
+                           
+                            <!-- end col -->
+                            
+                            {% if product_lists == 0 %}
+
+                            {% else %}
+                            <div class="col-xl-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        
+                                            <div class="me-2">
+                                                <h5 class="card-title mb-4">Inventory</h5>
+                                            </div>
+                                           
+                                            <div class="table-responsive">
+                                                {% #table %}
+                                                        {% #thead %}
+                                                            {% #tr %}
+                                                                {% #th scope="col" colspan="2" %} Product {% /th %}
+                                                                {% #th scope="col" %} Avialble Quantity{% /th %}
+                                                                {% comment %} {% #th scope="col" %} Action{% /th %} {% endcomment %}
+                                                            {% /tr %}
+                                                        {% /thead %}
+                                                        {% #tbody %}
+                                                        {% for data in product_lists %}
+                                                            {% #tr %}
+                                                                                
+                                                                    {% #td %}
+                                                                        <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">{{data.product_id.name}}</a></h5>
+                                                                        <p class="text-muted mb-0">{{data.product_id.category_id.name}}</p>
+                                                                    {% /td %}
+                                                                    {% #td %}<i class="bx bx-like align-middle me-1"></i> {{data.avialable_quantity}}{% /td %}
+                                                                  
+                                                            {% /tr %}
+                                                       {% endfor %}
+                                                                
+                                                        {% /tbody %}
+                                                {% /table %}
+                                                
+                                                  
+                                            </div>
+                                        
+                                       
+                                    </div>
+                                </div>
+                                <!-- end card -->
+                            </div>
+                                
+                            {% endif %}
+                                
+                            
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+{% endblock %}
+
+{% block extra_javascript %}
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js'%}"></script>
+
+    <!-- dashboard blog init -->
+    <script src="{% static 'js/pages/dashboard-blog.init.js'%}"></script>
+
+{% endblock %}

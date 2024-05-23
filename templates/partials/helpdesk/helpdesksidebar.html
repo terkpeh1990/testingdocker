@@ -1,0 +1,85 @@
+{% load static %} {% block sidebar %}
+  <!-- ========== Left Sidebar Start ========== -->
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
+      <!-- - Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
+          <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Help Desk</span>
+                </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                    
+                        <li>
+                            <a href="{% url 'helpdesk:ticketdashboard' %}" key="t-team">Dashboard</a>
+                        </li>
+                        
+                        {% if perms.helpdesk.custom_solve_ticket %}
+                            <li>
+                                <a href="{% url 'helpdesk:agent-ticket-list' %}" key="t-team">Assigned Ticket</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'helpdesk:ontime-ticket' %}" key="t-ontime">Ticket Solved on Time</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'helpdesk:notontime-ticket' %}" key="t-notontime">Ticket not Solved on Time</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'helpdesk:open-ticket' %}" key="t-open">Open Tickets</a>
+                            </li> 
+
+                        {% endif %}
+                            
+                        
+                        <li>
+                            <a href="{% url 'helpdesk:ticket-list' %}" key="t-team">List of TIcket</a>
+                        </li> 
+
+                            
+                    </ul>
+            </li>
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Setup</span>
+                </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        
+                        {% if perms.helpdesk.custom_create_team %}
+                            <li>
+                                <a href="{% url 'helpdesk:team-list' %}" key="t-team">Team</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'helpdesk:level-list' %}" key="t-level">Level</a>
+                            </li> 
+                        {% endif %}
+                        
+                        
+                        {% if perms.helpdesk.custom_create_agent %}
+                            <li>
+                                <a href="{% url 'helpdesk:agent-list' %}" key="t-agent">Agents</a>
+                            </li> 
+                            
+                        {% endif %}
+                            
+                        
+                    
+                    </ul>
+            </li>
+          
+           
+            
+        
+          
+          
+        </ul>
+      </div>
+      <!-- Sidebar -->
+    </div>
+  </div>
+  <!-- Left Sidebar End -->
+{% endblock %}

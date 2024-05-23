@@ -1,0 +1,95 @@
+{% extends 'partials/inventory/inventorybase.html' %}
+{% load static %}
+
+{% block extra_css %}
+    
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css">
+    {% comment %} <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block contents %}
+   
+
+    {% #modal %}
+        
+        <div class ="row mb-2">
+            <h4 class="card-title mb-3">Avialable Assets</h4>
+            <div class="table-responsive">
+                    {% #table %}
+                        {% #thead %}
+                            {% #tr name ="headrow" %}
+                            
+                                {% #th name ="headbatch" %}Serial/Chasis No.{% /th %}
+                                {% #th name ="headintakedate" %}Description{% /th %}
+                                {% #th name ="headexpiredate" %}Status{% /th %}
+                                
+                            {% /tr %}
+                        {% /thead%}
+                        {% #tbody %}
+                            {% for data in assets_list  %}
+                                {% #tr name ="bodyrow" %}
+                                    
+                                    {% #td name ="sn" %}{{data.serial_number}}{% /td %}
+                                    {% #td name ="description" %}{{data.brand_id.name }} {{data.description}}{% /td %}
+                                    {% #td name ="status" %}
+                                        {% if data.status %}
+                                            <span class="badge bg-danger">Issued</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Avialable</span>
+                                        {% endif %}
+                                    
+                                    {% /td %}
+                                    
+                                
+                            
+                                {% /tr %}
+                            {% endfor %}
+                        {% /tbody %}
+                    {% /table %}
+                <!-- end table -->
+            </div>
+        </div>
+        <div class ="row mb-2">
+            {% #actions name ="districtedit" %}
+                <a href="{% url 'inventory:product-list' %}" class="btn btn-soft-primary w-100">Close</a>
+            {% /actions %}
+        </div>    
+    {% /modal %}
+   
+    {% block extra_javascript %}
+    
+        <!-- Required datatable js -->
+        <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        <!-- Buttons examples -->
+        <script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'libs/jszip/dist/jszip.min.js' %}"></script>
+        <script src="{% static 'libs/pdfmake/build/pdfmake.min.js' %}"></script>
+        <script src="{% static 'libs/pdfmake/build/vfs_fonts.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+        
+        <!-- Responsive examples -->
+        <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+        <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+   
+        <!-- Datatable init js -->
+        <script src="{% static 'js/pages/datatables.init.js' %}"></script>
+        
+       
+    {% endblock %}
+{% endblock %}

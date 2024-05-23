@@ -1,0 +1,20 @@
+<title hx-swap-oob="innerHTML:title">
+  {% block title %}
+
+  {% endblock %}
+</title>
+
+<div id="breadcrumbs">
+  <h4 class="mb-sm-0 font-size-18">{{ heading }}</h4>
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+      {% block breadcrumbs %}
+
+      {% endblock %}
+    </ol>
+  </div>
+</div>
+
+{% block canvas %}
+
+{% endblock %}

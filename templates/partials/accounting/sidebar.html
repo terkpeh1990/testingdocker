@@ -1,0 +1,155 @@
+{% load static %} {% block sidebar %}
+  <!-- ========== Left Sidebar Start ========== -->
+  <div class="vertical-menu">
+    <div data-simplebar class="h-100">
+      <!-- - Sidemenu -->
+      <div id="sidebar-menu">
+        <!-- Left Menu Start -->
+        <ul class="metismenu list-unstyled" id="side-menu">
+          <li class="menu-title" key="t-menu">Menu</li>
+          {% if perms.accounting.custom_view_chart_of_accounts %}
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Setup</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    {% if perms.accounting.custom_view_chart_of_accounts %}
+                        <li>
+                            <a href="{% url 'accounting:currency-list' %}" key="t-currency">Currencies</a>
+                        </li> 
+                        <li>
+                            <a href="{% url 'accounting:accountclass-list' %}" key="t-coa">Chart of Accounts</a>
+                        </li> 
+                        <li>
+                          <a href="{% url 'accounting:banktype-list' %}" key="bat">Bank Accounts Type</a>
+                        </li> 
+                    {% endif %}
+                    {% if perms.accounting.custom_create_fisical_year %}
+                        <li>
+                            <a href="{% url 'accounting:fiscalyear-list' %}" key="t-Fiscalyear">Fiscal Year</a>
+                        </li> 
+                        
+                    {% endif %}
+              
+                </ul>
+                
+            </li>
+          {% endif %}
+          {% if perms.accounting.custom_view_pv %}
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Payment Voucher</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    
+                  
+                    {% if perms.accounting.custom_view_pv %}
+                        
+                        <li>
+                          <a href="{% url 'accounting:paymentvoucher-list' %}" key="t-pv">Payment Voucher</a>
+                      </li> 
+                        
+                    {% endif %}
+                  
+                    {% if perms.accounting.custom_authorise_pv %}
+                        <li>
+                            <a href="{% url 'accounting:pending-paymentvoucher-list' %}" key="p-pv">Pending</a>
+                        </li> 
+                        
+                    {% endif %}
+                    {% if perms.accounting.custom_approve_pv %}
+                        <li>
+                            <a href="{% url 'accounting:authorised-paymentvoucher-list' %}" key="r-pv">Recommended For Approval</a>
+                        </li> 
+                        
+                    {% endif %}
+                    {% if perms.accounting.custom_authorise_annd_pass_pv %}
+                        <li>
+                            <a href="{% url 'accounting:authorisedandpay-paymentvoucher-list' %}" key="e-pv">Elegibility Check</a>
+                        </li> 
+                        <li>
+                          <a href="{% url 'accounting:ia-list' %}" key="e-pv">IA Ledger Book </a>
+                      </li>
+                        
+                    {% endif %}
+                    {% if perms.accounting.custom_add_cheque_no %}
+                        <li>
+                            <a href="{% url 'accounting:chequeno-paymentvoucher-list' %}" key="ch-pv">Without Cheque No</a>
+                        </li> 
+                      
+                    {% endif %}
+                    {% if perms.accounting.custom_add_cheque_no %}
+                        <li>
+                            <a href="{% url 'accounting:payables' %}" key="ap-pv">Payables</a>
+                        </li> 
+                      
+                    {% endif %}
+                    <!-- {% if perms.accounting.custom_authorise_annd_pass_pv %}
+                        <li>
+                            <a href="{% url 'accounting:authorisedandpay-paymentvoucher-list' %}" key="t-pv">Pv Elegibility Check</a>
+                        </li> 
+                        
+                    {% endif %} -->
+
+                    
+                </ul>
+                
+            </li>
+          {% endif %}
+          {% if perms.accounting.custom_create_imprest %}
+            <li>
+                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="bx bx-data"></i>
+                <span key="t-products">Imprest</span>
+                </a>
+                <ul class="sub-menu" aria-expanded="false">
+                    
+                  
+                    {% if perms.accounting.custom_create_imprest %}
+                        
+                        <li>
+                          <a href="{% url 'accounting:manage-imprest' %}" key="i-pv">Imprest</a>
+                        </li> 
+                        
+                    {% endif %}
+                    {% if perms.accounting.custom_approve_imprest %}
+                        
+                        <li>
+                          <a href="{% url 'accounting:pending-imprest' %}" key="ip-pv">Pending</a>
+                        </li> 
+                        
+                    {% endif %}
+                    {% if perms.accounting.custom_certify_imprest %}
+                        
+                      <li>
+                        <a href="{% url 'accounting:approved-imprest' %}" key="ia-pv">Certify </a>
+                      </li> 
+                    
+                    {% endif %}
+                    {% if perms.accounting.custom_pay_imprest %}
+                        
+                      <li>
+                        <a href="{% url 'accounting:certified-imprest' %}" key="ia-pv">Pay </a>
+                      </li> 
+                      <li>
+                        <a href="{% url 'accounting:retire-imprest' %}" key="ia-pv">Retire </a>
+                      </li> 
+                    
+                    {% endif %}
+                  
+                </ul>
+                
+            </li>
+        {% endif %}
+          
+         
+         
+        </ul>
+      </div>
+      <!-- Sidebar -->
+    </div>
+  </div>
+  <!-- Left Sidebar End -->
+{% endblock %}

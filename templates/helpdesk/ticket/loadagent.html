@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for data in agent %}
+  <option value="{{ data.pk }}">{{ data.agent }}</option>
+{% endfor %}
